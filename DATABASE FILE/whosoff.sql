@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 03, 2023 at 05:00 PM
+-- Generation Time: Jun 10, 2023 at 10:48 AM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -50,11 +50,11 @@ INSERT INTO `academicyear` (`Ayid`, `AcademicYear`) VALUES
 CREATE TABLE `attendance` (
   `attid` int(11) NOT NULL,
   `sid` int(11) NOT NULL,
-  `date` date NOT NULL,
+  `date` date NOT NULL DEFAULT current_timestamp(),
   `ispresent` tinyint(4) NOT NULL,
-  `Courseid` int(11) NOT NULL,
-  `hour` time NOT NULL,
-  `FacId` int(11) DEFAULT NULL
+  `hour` tinyint(4) NOT NULL,
+  `FacId` int(11) NOT NULL,
+  `CourseId` int(20) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 -- --------------------------------------------------------
@@ -163,8 +163,6 @@ CREATE TABLE `faculty_subject` (
 --
 
 INSERT INTO `faculty_subject` (`FacId`, `CourseId`, `Ayid`) VALUES
-(1, 3, 2020),
-(2, 4, 2020),
 (1, 3, 1),
 (2, 4, 1);
 
@@ -206,18 +204,25 @@ CREATE TABLE `student` (
   `ParentNo` int(100) NOT NULL,
   `EmailId` varchar(55) NOT NULL,
   `RegNo` varchar(255) NOT NULL,
-  `AyId` int(11) NOT NULL
+  `AyId` int(11) NOT NULL,
+  `password` varchar(100) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data for table `student`
 --
 
-INSERT INTO `student` (`sid`, `FName`, `LName`, `AdmnNo`, `Gender`, `DOB`, `PhoneNo`, `ParentNo`, `EmailId`, `RegNo`, `AyId`) VALUES
-(1, 'Akshaya', 'M S', 8246, 'F', '2000-09-14', 2147483647, 2147483647, 'akshayams@gmail.com', 'TRV20IT014', 1),
-(2, 'Gouri', 'B S', 8248, 'F', '2002-06-12', 2147483647, 2147483647, 'gouribs@gmail.com', 'TRV20IT036', 1),
-(3, 'Pavithra', 'T', 8228, 'F', '2002-10-23', 2147483647, 2147483647, 'pavi8hrat@gmail.com', 'TRV20IT049', 1),
-(4, 'Prajitha', 'P J', 8226, 'F', '2002-03-19', 2147483647, 2147483647, 'prajithapj@gmail.com', 'TRV20IT050', 1);
+INSERT INTO `student` (`sid`, `FName`, `LName`, `AdmnNo`, `Gender`, `DOB`, `PhoneNo`, `ParentNo`, `EmailId`, `RegNo`, `AyId`, `password`) VALUES
+(1, 'Akshaya', 'M S', 8246, 'F', '2000-09-14', 2147483647, 2147483647, 'akshayams@gmail.com', 'TRV20IT014', 1, 'Akshaya014'),
+(2, 'Gouri', 'B S', 8248, 'F', '2002-06-12', 2147483647, 2147483647, 'gouribs@gmail.com', 'TRV20IT036', 1, 'Gouri036'),
+(3, 'Pavithra', 'T', 8228, 'F', '2002-10-23', 2147483647, 2147483647, 'pavi8hrat@gmail.com', 'TRV20IT049', 1, 'Pavithra049'),
+(4, 'Prajitha', 'P J', 8226, 'F', '2002-03-19', 2147483647, 2147483647, 'prajithapj@gmail.com', 'TRV20IT050', 1, 'Prajitha050'),
+(5, 'Abhiram', 'Sasidharan', 8245, 'M', '2002-10-13', 2147483647, 2147483647, 'abhiram@gmail.com', 'TRV20IT002', 1, 'Abhiram002'),
+(6, 'Aasiya', 'Thaha', 8255, 'F', '2001-05-03', 2147483647, 2147483647, 'aasiya@gmail.com', 'TRV20IT001', 1, 'Aasiya001'),
+(7, 'Ambadi', 'C M', 8249, 'M', '2002-05-08', 2147483647, 2147483647, 'ambadi@gmail.com', 'TRV20IT016', 1, 'Ambadi016'),
+(8, 'Anamika', 'R S', 8295, 'F', '2002-10-20', 2147483647, 2147483647, 'anamikars@gmail.com', 'TRV20IT019', 1, 'Anamika019'),
+(9, 'Afreen', 'Syed', 8236, 'F', '2002-07-13', 2147483647, 2147483647, 'afreen@gmail.com', 'TRV20IT011', 1, 'Afreen011'),
+(10, 'Rithika', 'Raj', 8220, 'F', '2002-12-01', 2147483647, 2147483647, 'rithika@gmail.com', 'TRV20IT052', 1, 'Rithika052');
 
 -- --------------------------------------------------------
 
@@ -239,7 +244,13 @@ INSERT INTO `student_relation` (`sid`, `SemId`, `Branchid`) VALUES
 (1, 6, 2),
 (2, 6, 2),
 (3, 6, 1),
-(4, 6, 1);
+(4, 6, 1),
+(5, 6, 1),
+(6, 6, 1),
+(10, 6, 1),
+(9, 6, 1),
+(8, 6, 1),
+(7, 6, 2);
 
 --
 -- Indexes for dumped tables
@@ -298,10 +309,16 @@ ALTER TABLE `student`
 --
 
 --
+-- AUTO_INCREMENT for table `attendance`
+--
+ALTER TABLE `attendance`
+  MODIFY `attid` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `student`
 --
 ALTER TABLE `student`
-  MODIFY `sid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `sid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
