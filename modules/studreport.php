@@ -99,7 +99,10 @@ $regno = $_SESSION['RegNo'];
     </div>
 
     <div class="duty-leave-button">
-        <button>Apply for Duty Leave</button>
+        <form action="dutyleave.php" method="POST">
+       <input type="submit" value="Apply For Duty Leave"/>
+     </form>
     </div>
+
 </body>
 </html>

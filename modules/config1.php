@@ -1,5 +1,6 @@
 <?php
 
+
 	//  Development connection
 
 	$databaseHost = 'localhost';
