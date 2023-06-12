@@ -125,7 +125,7 @@
   <?php endif; ?>
   <div class="row">
     <div class="col-md-6 col-md-offset-3 col-lg-6">
-      <form class="form-horizontal" id="staffadvisorForm" action="modules/verify.php" method="post" data-toggle="validator">
+      <form class="form-horizontal" id="staffadvisorForm" action="modules/staffverify.php" method="post" data-toggle="validator">
         <div class="form-group">
           <label for="staffadvisorUsername" class="control-label">Username</label>
           <input type="text" class="form-control" id="staffadvisorUsername" name="name" maxlength="16" placeholder="Username" required>
