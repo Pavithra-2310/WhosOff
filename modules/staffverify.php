@@ -52,6 +52,6 @@ else
              header("location:../index.php?invalid=y");
           }
         }
-      }}
+      }
 
 ?>

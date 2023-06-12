@@ -11,8 +11,18 @@
             margin: 20px;
         }
 
+        .sections-container {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
         .section {
             margin-bottom: 20px;
+            flex: 1 1 30%;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
         }
 
         .section-heading {
@@ -22,73 +32,68 @@
         }
 
         .button {
-            display: inline-block;
+            display: block;
+            width: 100%;
             padding: 10px 15px;
             border: none;
             border-radius: 4px;
             cursor: pointer;
-            margin-right: 10px;
-        }
-
-        .button-request {
-            background-color: #4CAF50;
-            color: white;
-        }
-
-        .button-approved {
+            margin-bottom: 10px;
             background-color: #2196F3;
             color: white;
         }
 
-        .button-add {
-            background-color: #FF9800;
-            color: white;
-        }
-
-        .button-remove {
-            background-color: #F44336;
-            color: white;
-        }
-
-        .button-view {
-            background-color: #9C27B0;
-            color: white;
-        }
-
         .button-sem {
-            background-color: #673AB7;
-            color: white;
+            width: 200px;
+            margin-right: 10px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h2>Staff Advisors</h2>
-        <p>Faculty's Name: [Faculty Name]</p>
-        <p>Designation: [Designation]</p>
+        <h2>Staff Advisor's Page</h2>
 
-        <div class="section">
-            <div class="section-heading">Section 1: Advisor Actions</div>
-            <button class="button button-request">Request</button>
-            <button class="button button-approved">Approved</button>
-            <button class="button button-add">Add Student</button>
-            <button class="button button-remove">Remove Student</button>
-        </div>
+        <?php
+        include 'config1.php'; // Include your database connection file
 
-        <div class="section">
-            <div class="section-heading">Section 2: Current Sem Report</div>
-            <button class="button button-view">View Student List</button>
-            <button class="button button-view">View Attendance</button>
-        </div>
+        // Fetch faculty's name from the database
+        try {
+          session_start();
+            $FacultyName = $_SESSION['FacultyName'];
 
-        <div class="section">
-            <div class="section-heading">Section 3: Semester Reports</div>
-            <?php
-            $semesters = array('Sem 1', 'Sem 2', 'Sem 3', 'Sem 4', 'Sem 5', 'Sem 6', 'Sem 7', 'Sem 8');
-            foreach ($semesters as $semester) {
-                echo '<button class="button button-sem">' . $semester . '</button>';
-            }
-            ?>
+            $stmt = $conn->query("SELECT FacultyName FROM faculty where faculty.FacultyName={$FacultyName}");
+            $FacultyName = $stmt->fetchColumn();
+        } catch(PDOException $e) {
+            echo "Error: " . $e->getMessage();
+        }
+        $conn = null;
+        ?>
+
+        <p>Faculty's Name: <?php echo $FacultyName; ?></p>
+        <p>Designation: Staff Advisor</p>
+
+        <div class="sections-container">
+            <div class="section">
+                <button class="button button-request">Request</button>
+                <button class="button button-approved">Approved</button>
+                <button class="button button-add">Add Student</button>
+                <button class="button button-remove">Remove Student</button>
+            </div>
+
+            <div class="section">
+                <div class="section-heading"><center> Current Sem Report</center></div>
+                <button class="button button-view">View Student List</button>
+                <button class="button button-view">View Attendance</button>
+            </div>
+
+            <div class="section">
+                <?php
+                $semesters = array('Sem 1', 'Sem 2', 'Sem 3', 'Sem 4', 'Sem 5', 'Sem 6', 'Sem 7', 'Sem 8');
+                foreach ($semesters as $semester) {
+                    echo '<button class="button button-sem">' . $semester . '</button>';
+                }
+                ?>
+            </div>
         </div>
     </div>
 </body>
