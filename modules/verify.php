@@ -7,7 +7,7 @@
 
 
         $pass=$_POST['pass'];
-	
+
 
         if( isset($nm) && isset($pass))
       {
@@ -51,6 +51,6 @@ else
              header("location:../index.php?invalid=y");
           }
         }
-      }}
+      }
 
 ?>

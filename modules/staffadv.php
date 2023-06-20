@@ -48,15 +48,61 @@
             margin-right: 10px;
         }
     </style>
+    <script>
+        function handleRequestButtonClick() {
+    // Create a space to display the request list
+    var requestList = document.createElement("div");
+    requestList.id = "request-list";
+
+    // TODO: Populate the request list with data from the server
+    // Make an AJAX request to fetch the list of students who applied for duty leave
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "dutyleavereqlist.php", true);
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            var students = JSON.parse(xhr.responseText);
+
+
+students.RegNos.forEach(function (RegNo, index) {
+                        var studentButton = document.createElement("button");
+                        studentButton.className = "button button-student";
+                        studentButton.innerHTML = RegNo;
+                        studentButton.onclick = function () {
+                            handleStudentButtonClick(RegNo, students.DutyLeaveIds[index]);
+};
+                requestList.appendChild(studentButton);
+            });
+
+            // Redirect to another page when a student is selected
+            requestList.addEventListener("click", function (event) {
+                var selectedStudent = event.target.innerHTML;
+                if (selectedStudent) {
+                    // Perform the necessary redirection
+                   var selectedIndex = students.RegNos.indexOf(selectedStudent);
+                            var selectedId = students.DutyLeaveIds[selectedIndex];
+                            window.location.href = "dutyleave_approval.php?RegNo=" + encodeURIComponent(selectedStudent) + "&id=" + encodeURIComponent(selectedId);
+                }
+            });
+
+            // Append the request list to the document body
+            document.body.appendChild(requestList);
+        }
+    };
+    xhr.send();
+}
+function handleStudentButtonClick(RegNo,id) {
+            // Redirect to the duty leave approval page with the selected student's RegNo
+           window.location.href = "dutyleave_approval.php?RegNo=" + encodeURIComponent(RegNo) + "&id=" + encodeURIComponent(id);
+        }
+
+    </script>
 </head>
 <body>
     <div class="container">
         <h2>Staff Advisor's Page</h2>
-
         <?php
-        include 'config1.php'; // Include your database connection file
-
-        // Fetch faculty's name from the database
+        include 'config1.php'; 
+        
         try {
           session_start();
             $FacultyName = $_SESSION['FacultyName'];
@@ -70,18 +116,19 @@
         ?>
 
         <p>Faculty's Name: <?php echo $FacultyName; ?></p>
+
         <p>Designation: Staff Advisor</p>
 
         <div class="sections-container">
             <div class="section">
-                <button class="button button-request">Request</button>
+                <button class="button button-request" onclick="handleRequestButtonClick()">Request</button>
                 <button class="button button-approved">Approved</button>
                 <button class="button button-add">Add Student</button>
                 <button class="button button-remove">Remove Student</button>
             </div>
 
             <div class="section">
-                <div class="section-heading"><center> Current Sem Report</center></div>
+                <div class="section-heading"><center>Current Sem Report</center></div>
                 <button class="button button-view">View Student List</button>
                 <button class="button button-view">View Attendance</button>
             </div>

@@ -103,6 +103,9 @@ $regno = $_SESSION['RegNo'];
         <form action="dutyleave.php" method="POST">
        <input type="submit" value="Apply For Duty Leave"/>
      </form>
+<form action="status.php" method="POST">
+        <input type="submit" value="View Status"/>
+    </form>
     </div>
 
 </body>

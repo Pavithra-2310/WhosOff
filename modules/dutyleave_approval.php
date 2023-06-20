@@ -53,94 +53,117 @@
     </style>
 </head>
 <body>
-    <?php
-   
-    include 'config1.php';
+  <?php
+  include 'config1.php';
 
-    // Check if the duty leave ID is provided in the query string
-    if(isset($_GET['duty_leave_id'])) {
-        $dutyLeaveId = $_GET['duty_leave_id'];
+  if(isset($_GET['RegNo']) && isset($_GET['id'])) {
+      $RegNo = $_GET['RegNo'];
+      $id = $_GET['id'];
 
-        // Fetch duty leave details from the database based on duty leave ID
-        $sql = "SELECT * FROM duty_leave WHERE id = ?";
-        $stmt = $conn->prepare($sql);
-        $stmt->execute([$dutyLeaveId]);
-        $dutyLeave = $stmt->fetch();
+      // Fetch student details from the database based on Register Number
+      $sql = "SELECT student.*, branch.BranchName
+              FROM student
+              INNER JOIN student_relation ON student.sid = student_relation.sid
+              INNER JOIN branch ON student_relation.Branchid = branch.Branchid
+              WHERE student.RegNo = ?";
+      $stmt = $conn->prepare($sql);
+      $stmt->execute([$RegNo]);
+      $student = $stmt->fetch();
 
-        // Fetch student details from the database based on Register Number
-        $sql = "SELECT * FROM student WHERE RegNo = ?";
-        $stmt = $conn->prepare($sql);
-        $stmt->execute([$dutyLeave['RegNo']]);
-        $student = $stmt->fetch();
+      if($student) {
+          echo "<h2>Student Details</h2>";
+          echo "<p><strong>Register Number:</strong> " . $student['RegNo'] . "</p>";
+          echo "<p><strong>Name:</strong> " . $student['FName'] . "</p>";
+          echo "<p><strong>Department:</strong> " . $student['BranchName'] . "</p>";
+          echo "<p><strong>Email:</strong> " . $student['EmailId'] . "</p>";
+      } else {
+          echo "Student not found.";
+      }
 
-        // Fetch duty leave dates from the database based on duty leave ID
-        $sql = "SELECT * FROM duty_leave_dates WHERE duty_leave_id = ?";
-        $stmt = $conn->prepare($sql);
-        $stmt->execute([$dutyLeaveId]);
-        $dutyLeaveDates = $stmt->fetchAll();
+      // Fetch duty leave details from the database based on duty_leave ID
+      $sql = "SELECT * FROM duty_leave WHERE id = ?";
+      $stmt = $conn->prepare($sql);
+      $stmt->execute([$id]);
+      $dutyLeave = $stmt->fetch();
 
-        // Handle the faculty actions (approve/reject/update dates)
-        if(isset($_POST['action'])) {
-            $action = $_POST['action'];
+      if($dutyLeave) {
+          echo "<h2>Duty Leave Details</h2>";
+          echo "<p><strong>Reason:</strong> " . $dutyLeave['reason'] . "</p>";
 
-            if($action === 'approve') {
-                // Update the duty leave status as approved
-                $sql = "UPDATE duty_leave SET status = 'approved' WHERE id = ?";
-                $stmt = $conn->prepare($sql);
-                $stmt->execute([$dutyLeaveId]);
+         echo "<p><strong>Request Letter:</strong></p>";
+echo "<p><a href='uploads/" . $dutyLeave['file_name'] . "' target='_blank'>View Letter</a></p>";
+              echo "<hr>";
 
-                echo "Duty leave approved.";
-            } elseif($action === 'reject') {
-                // Update the duty leave status as rejected
-                $sql = "UPDATE duty_leave SET status = 'rejected' WHERE id = ?";
-                $stmt = $conn->prepare($sql);
-                $stmt->execute([$dutyLeaveId]);
 
-                echo "Duty leave rejected.";
-            } elseif($action === 'update_dates') {
-                // TODO: Update the duty leave dates based on faculty modifications
-                // You can add the necessary code here
 
-                echo "Dates updated.";
-            }
-        }
-    } else {
-        echo "Duty leave ID not provided.";
-    }
-    ?>
+      } else {
+          echo "Duty leave not found.";
+      }
 
-    <h2>Student Details</h2>
-    <?php if(isset($student)): ?>
-        <p><strong>Register Number:</strong> <?php echo $student['RegNo']; ?></p>
-        <p><strong>Name:</strong> <?php echo $student['Name']; ?></p>
-        <p><strong>Department:</strong> <?php echo $student['Department']; ?></p>
- 	<p><strong>Email:</strong> <?php echo $student['EmailId']; ?></p>
-        
-    <?php endif; ?>
+      // Fetch duty leave dates from the database based on duty_leave ID
+      $sql = "SELECT * FROM duty_leave_dates WHERE duty_leave_id = ?";
+      $stmt = $conn->prepare($sql);
+      $stmt->execute([$id]);
+      $dutyLeaveDates = $stmt->fetchAll();
 
-    <h2>Duty Leave Details</h2>
-    <?php if(isset($dutyLeave)): ?>
-        <p><strong>Reason:</strong> <?php echo $dutyLeave['Reason']; ?></p>
-        <p><strong>Start Date:</strong> <?php echo $dutyLeave['StartDate']; ?></p>
-        <p><strong>End Date:</strong> <?php echo $dutyLeave['EndDate']; ?></p>
-        <p><strong>Duty Leave Dates:</strong></p>
-        <?php if(count($dutyLeaveDates)): ?>
-            <ul>
-            <?php foreach($dutyLeaveDates as $date): ?>
-                <li><?php echo $date['date']; ?></li>
-            <?php endforeach; ?>
-            </ul>
-        <?php endif; ?>
-    <?php endif; ?>
+      echo "<h2>Duty Leave Dates</h2>";
+      if(count($dutyLeaveDates) > 0) {
+          echo "<ul>";
+          foreach($dutyLeaveDates as $date) {
+              echo "<li>" . $date['date_time'] . "</li>";
+          }
+          echo "</ul>";
+      } else {
+          echo "<p>No duty leave dates available.</p>";
+      }
 
-    <div class="button-container">
-        <form method="POST" style="display: inline;">
-            <button type="submit" name="action" value="approve" class="green-button">Send to HOD</button>
-        </form>
-        <form method="POST" style="display: inline;">
-            <button type="submit" name="action" value="reject" class="red-button">Reject</button>
-        </form>
+      echo "<div class='button-container'>";
+      if($dutyLeave['status'] === 0) {
+          echo "<form method='POST' style='display: inline-block;'>";
+          echo "<input type='hidden' name='action' value='approve'>";
+          echo "<button class='green-button' type='submit'>Approve</button>";
+          echo "</form>";
+          echo "<form method='POST' style='display: inline-block;'>";
+          echo "<input type='hidden' name='action' value='reject'>";
+          echo "<button class='red-button' type='submit'>Reject</button>";
+          echo "</form>";
+      }
+      if($dutyLeave['status'] === 1) {
+          echo "<form method='POST' style='display: inline-block;'>";
+          echo "<input type='hidden' name='action' value='update_dates'>";
+          echo "<button type='submit'>Update Dates</button>";
+          echo "</form>";
+      }
+      echo "</div>";
+  }
+
+  // Handle the faculty actions (approve/reject/update dates)
+  if(isset($_POST['action'])) {
+      $action = $_POST['action'];
+
+      if($action === 'approve') {
+          // Update the duty leave status as approved
+          $sql = "UPDATE duty_leave SET status = 'approved' WHERE id = ?";
+          $stmt = $conn->prepare($sql);
+          $stmt->execute([$id]);
+
+          echo "Duty leave approved.";
+      } elseif($action === 'reject') {
+          // Update the duty leave status as rejected
+          $sql = "UPDATE duty_leave SET status = 'rejected' WHERE id = ?";
+          $stmt = $conn->prepare($sql);
+          $stmt->execute([$id]);
+
+          echo "Duty leave rejected.";
+      } elseif($action === 'update_dates') {
+          // TODO: Update the duty leave dates based on faculty modifications
+          // You can add the necessary code here
+
+          echo "Dates updated.";
+      }
+  }
+  ?>
+
     </div>
 </body>
 </html>
-
