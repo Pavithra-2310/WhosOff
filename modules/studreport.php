@@ -48,7 +48,7 @@
             display: block;
             margin-top: 20px;
             text-align: left;
-	    
+
         }
     </style>
 </head>
@@ -56,19 +56,16 @@
     <h1>Student Profile</h1>
 
     <?php
+    include 'config1.php';
+    session_start();
 
-   include 'config1.php';
-   session_start();
-
-$regno = $_SESSION['RegNo'];
+    $regno = $_SESSION['RegNo'];
     // Query to retrieve student data
     $sql = "SELECT * FROM student WHERE student.RegNo = '{$regno}'";
-
     $result = $conn->query($sql);
 
     // Check if there are any rows in the result
     if ($result->rowCount() > 0) {
-
         // Fetch the first row (assuming there's only one student)
         $student = $result->fetch(PDO::FETCH_ASSOC);
 
@@ -85,27 +82,49 @@ $regno = $_SESSION['RegNo'];
     } else {
         echo "No student data found.";
     }
-
-
     ?>
 
     <div class="attendance-section">
         <h2>Attendance Percentage</h2>
-        <button>Course 1</button>
-        <button>Course 2</button>
-        <button>Course 3</button>
-        <button>Course 4</button>
-        <button>Course 5</button>
-        <button>Course 6</button>
+        <?php
+        // Query to retrieve courses for the student's branch
+        $studentId = $student['sid'];
+        $courseQuery = "SELECT c.CourseCode FROM course c JOIN student_relation s ON c.BranchId = s.Branchid WHERE s.SID = '{$studentId}'";
+        $courseResult = $conn->query($courseQuery);
+
+        if ($courseResult->rowCount() > 0) {
+            // Fetch and display course codes
+            while ($course = $courseResult->fetch(PDO::FETCH_ASSOC)) {
+                echo "<button onclick='getAttendancePercentage(\"" . $course['CourseCode'] . "\")'>" . $course['CourseCode'] . "</button>";
+            }
+        } else {
+            echo "No courses found for the student's branch.";
+        }
+        ?>
+
+        <div id="attendanceResult"></div>
+
+        <script>
+            function getAttendancePercentage(courseCode) {
+                var xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        document.getElementById("attendanceResult").innerHTML = xhr.responseText;
+                    }
+                };
+                xhr.open("GET", "getAttendance.php?courseCode=" + courseCode, true);
+                xhr.send();
+            }
+        </script>
     </div>
 
     <div class="duty-leave-button">
         <form action="dutyleave.php" method="POST">
-       <input type="submit" value="Apply For Duty Leave"/>
-     </form>
-<form action="status.php" method="POST">
-        <input type="submit" value="View Status"/>
-    </form>
+            <input type="submit" value="Apply For Duty Leave"/>
+        </form>
+        <form action="status.php" method="POST">
+            <input type="submit" value="View Status"/>
+        </form>
     </div>
 
 </body>
