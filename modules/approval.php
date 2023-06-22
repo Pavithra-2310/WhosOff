@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Duty Leave Approval</title>
+    <title>Duty Leave Approval-HOD</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -54,6 +54,7 @@
 </head>
 <body>
   <?php
+
   include 'config1.php';
 
   if(isset($_GET['RegNo']) && isset($_GET['id'])) {
@@ -143,12 +144,12 @@ echo "<p><a href='uploads/" . $dutyLeave['file_name'] . "' target='_blank'>View 
 
       if($action === 'approve') {
           // Update the duty leave status as approved
-          $sql = "UPDATE duty_leave SET status = '1' WHERE id = ?";
+          $sql = "UPDATE duty_leave SET status = '2' WHERE id = ?";
           $stmt = $conn->prepare($sql);
           $stmt->execute([$id]);
 
           echo "Duty leave approved.";
-      } elseif($action === 'reject') {
+      } elseif($action === '-1') {
           // Update the duty leave status as rejected
           $sql = "UPDATE duty_leave SET status = '-1' WHERE id = ?";
           $stmt = $conn->prepare($sql);
@@ -167,4 +168,3 @@ echo "<p><a href='uploads/" . $dutyLeave['file_name'] . "' target='_blank'>View 
     </div>
 </body>
 </html>
-

@@ -1,83 +1,117 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>HOD Page</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f1f1f1;
         }
 
-        h1 {
-            text-align: center;
-            color: #333;
+        .container {
+            margin: 20px;
         }
 
-        form {
+        .sections-container {
             display: flex;
-            justify-content: center;
-            align-items: center;
+            justify-content: space-between;
             flex-wrap: wrap;
-            gap: 20px;
-            background-color: #ffffff;
+        }
+
+        .section {
+            margin-bottom: 20px;
+            flex: 1 1 30%;
             padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .column {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            width: 100%;
-        }
-
-        h2 {
-            margin-bottom: 10px;
-        }
-
-        button {
-            margin: 5px;
-            padding: 12px 24px;
-            font-size: 16px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            cursor: pointer;
+            border: 1px solid #ccc;
             border-radius: 4px;
         }
 
-        button:hover {
-            background-color: #45a049;
+        .section-heading {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .button {
+            display: block;
+            width: 100%;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-bottom: 10px;
+            background-color: #2196F3;
+            color: white;
+        }
+
+        .button-sem {
+            width: 200px;
+            margin-right: 10px;
         }
     </style>
 </head>
 <body>
-    <h1>REPORT</h1>
+    <div class="container">
+        <h2>HOD Page</h2>
+ 
 
-    <form>
-        <div class="column">
-            <h2>Leave requests</h2>
-            <button type="submit" name="session" value="leave_requests">Medical Leave Requests</button>
-            <button type="submit" name="session" value="leave_requests">Duty Leave Requests</button>
-        </div>
+        <div class="sections-container">
+            <div class="section">
+                <button id="duty-leave-button" class="button">Duty Leave Requests</button>
+            </div>
 
-        <div class="column">
-            <h2>View Attendance</h2>
-            <a href="hod_attendence_view.php">
-                <button type="button" name="year" value="1">1st Year</button>
-            </a>
-            <button type="submit" name="year" value="2">2nd Year</button>
-            <button type="submit" name="year" value="3">3rd Year</button>
-            <button type="submit" name="year" value="4">4th Year</button>
+            <div class="section">
+                <div class="section-heading"><center>View Attendance</center></div>
+                <button class="button">1st Year</button>
+                <button class="button">2nd Year</button>
+                <button class="button">3rd Year</button>
+                <button class="button">4th Year</button>
+            </div>
         </div>
-    </form>
+    </div>
+
+    <script>
+        function handleDutyLeaveButtonClick() {
+            // Create a space to display the request list
+            var requestList = document.createElement("div");
+            requestList.id = "request-list";
+
+            // Make an AJAX request to fetch the list of students with approved duty leave
+           var xhr = new XMLHttpRequest();
+            xhr.open("GET", "leave_details.php", true);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var students = JSON.parse(xhr.responseText);
+
+                    var matchingStudents = students.RegNos.filter(function (RegNo, index) {
+                        return students.BranchIds[index] === 1;
+                    });
+
+                    matchingStudents.forEach(function (RegNo, index) {
+                        var studentButton = document.createElement("button");
+                        studentButton.className = "button button-student";
+                        studentButton.innerHTML = RegNo;
+                        studentButton.onclick = function () {
+                            handleStudentButtonClick(RegNo, students.DutyLeaveIds[index]);
+                        };
+                        requestList.appendChild(studentButton);
+                    });
+
+                    // Append the request list to the document body
+                    document.body.appendChild(requestList);
+                }
+            };
+            xhr.send();
+        }
+
+        function handleStudentButtonClick(regNo, dutyLeaveId) {
+            // Redirect to the duty leave approval page with the selected student's regNo and dutyLeaveId
+            window.location.href = "approval.php?regNo=" + encodeURIComponent(regNo) + "&dutyLeaveId=" + encodeURIComponent(dutyLeaveId);
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            var dutyLeaveButton = document.getElementById("duty-leave-button");
+            dutyLeaveButton.addEventListener("click", handleDutyLeaveButtonClick);
+        });
+    </script>
 </body>
 </html>
-
-
