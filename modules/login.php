@@ -20,7 +20,7 @@
   <?php endif; ?>
   <div class="row">
     <div class="col-md-6 col-md-offset-3 col-lg-6">
-      <form class="form-horizontal" id="principalForm" action="modules/verify.php" method="post" data-toggle="validator">
+      <form class="form-horizontal" id="principalForm" action="modules/principal_verify.php" method="post" data-toggle="validator">
         <div class="form-group">
           <label for="principalUsername" class="control-label">Username</label>
           <input type="text" class="form-control" id="principalUsername" name="name" maxlength="16" placeholder="Username" required>
@@ -55,7 +55,7 @@
   <?php endif; ?>
   <div class="row">
     <div class="col-md-6 col-md-offset-3 col-lg-6">
-      <form class="form-horizontal" id="deanForm" action="modules/verify.php" method="post" data-toggle="validator">
+      <form class="form-horizontal" id="deanForm" action="modules/dean_verify.php" method="post" data-toggle="validator">
         <div class="form-group">
           <label for="deanUsername" class="control-label">Username</label>
           <input type="text" class="form-control" id="deanUsername" name="name" maxlength="16" placeholder="Username" required>
@@ -90,7 +90,7 @@
   <?php endif; ?>
   <div class="row">
     <div class="col-md-6 col-md-offset-3 col-lg-6">
-      <form class="form-horizontal" id="hodForm" action="modules/verify.php" method="post" data-toggle="validator">
+      <form class="form-horizontal" id="hodForm" action="modules/verifyhod.php" method="post" data-toggle="validator">
         <div class="form-group">
           <label for="hodUsername" class="control-label">Username</label>
           <input type="text" class="form-control" id="hodUsername" name="name" maxlength="16" placeholder="Username" required>

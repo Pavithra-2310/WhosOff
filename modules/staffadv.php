@@ -48,100 +48,111 @@
             margin-right: 10px;
         }
     </style>
-    <script>
+ 
+</head>
+<body>
+<div class="container">
+    <h2>Staff Advisor's Page</h2>
+    <?php
+    include 'config1.php';
+
+    session_start();
+    $FacultyName = $_SESSION['FacultyName'];
+
+    try {
+        // Fetch the branch ID for the staff advisor
+        $stmt = $conn->prepare("SELECT student_relation.Branchid FROM student_relation INNER JOIN student ON student.sid = student_relation.sid INNER JOIN staff_adv ON staff_adv.Branchid = student_relation.Branchid INNER JOIN faculty ON staff_adv.FacId = faculty.FacId WHERE faculty.FacultyName = :FacultyName");
+        $stmt->bindParam(':FacultyName', $FacultyName, PDO::PARAM_STR);
+        $stmt->execute();
+
+        // Fetch the result as an associative array
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // Retrieve the branch ID
+        $branchIds = $result['Branchid'];
+
+        // Perform further actions with the retrieved branch ID
+
+    } catch (PDOException $e) {
+        // Handle any errors that occurred during the database query
+        echo "Error: " . $e->getMessage();
+    }
+
+    $conn = null;
+    ?>
+
+    <p>Faculty's Name: <?php echo $FacultyName; ?></p>
+
+    <p>Designation: Staff Advisor</p>
+
+    <div class="sections-container">
+        <div class="section">
+            <button id="request-button" class="button button-request">Request</button>
+            <button class="button button-approved">Approved</button>
+            <button class="button button-add">Add Student</button>
+            <button class="button button-remove">Remove Student</button>
+        </div>
+
+        <div class="section">
+            <div class="section-heading"><center>Current Sem Report</center></div>
+            <button class="button button-view">View Student List</button>
+            <button class="button button-view">View Attendance</button>
+        </div>
+
+        <div class="section">
+            <?php
+            $semesters = array('Sem 1', 'Sem 2', 'Sem 3', 'Sem 4', 'Sem 5', 'Sem 6', 'Sem 7', 'Sem 8');
+            foreach ($semesters as $semester) {
+                echo '<button class="button button-sem">' . $semester . '</button>';
+            }
+            ?>
+        </div>
+    </div>
+</div>
+</body>
+
+   <script>
         function handleRequestButtonClick() {
-    // Create a space to display the request list
-    var requestList = document.createElement("div");
-    requestList.id = "request-list";
+            // Create a space to display the request list
+            var requestList = document.createElement("div");
+            requestList.id = "request-list";
 
-    // TODO: Populate the request list with data from the server
-    // Make an AJAX request to fetch the list of students who applied for duty leave
-    var xhr = new XMLHttpRequest();
-    xhr.open("GET", "dutyleavereqlist.php", true);
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            var students = JSON.parse(xhr.responseText);
+            // Make an AJAX request to fetch the list of students who applied for duty leave
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "dutyleavereqlist.php", true);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var students = JSON.parse(xhr.responseText);
 
+                    var matchingStudents = students.RegNos.filter(function (RegNo, index) {
+                        return students.BranchIds[index] === <?php echo json_encode($branchIds); ?>;
+                    });
 
-students.RegNos.forEach(function (RegNo, index) {
+                    matchingStudents.forEach(function (RegNo, index) {
                         var studentButton = document.createElement("button");
                         studentButton.className = "button button-student";
                         studentButton.innerHTML = RegNo;
                         studentButton.onclick = function () {
                             handleStudentButtonClick(RegNo, students.DutyLeaveIds[index]);
-};
-                requestList.appendChild(studentButton);
-            });
+                        };
+                        requestList.appendChild(studentButton);
+                    });
 
-            // Redirect to another page when a student is selected
-            requestList.addEventListener("click", function (event) {
-                var selectedStudent = event.target.innerHTML;
-                if (selectedStudent) {
-                    // Perform the necessary redirection
-                   var selectedIndex = students.RegNos.indexOf(selectedStudent);
-                            var selectedId = students.DutyLeaveIds[selectedIndex];
-                            window.location.href = "dutyleave_approval.php?RegNo=" + encodeURIComponent(selectedStudent) + "&id=" + encodeURIComponent(selectedId);
+                    // Append the request list to the document body
+                    document.body.appendChild(requestList);
                 }
-            });
-
-            // Append the request list to the document body
-            document.body.appendChild(requestList);
+            };
+            xhr.send();
         }
-    };
-    xhr.send();
-}
-function handleStudentButtonClick(RegNo,id) {
+        function handleStudentButtonClick(RegNo,id) {
             // Redirect to the duty leave approval page with the selected student's RegNo
            window.location.href = "dutyleave_approval.php?RegNo=" + encodeURIComponent(RegNo) + "&id=" + encodeURIComponent(id);
         }
 
+        document.addEventListener("DOMContentLoaded", function () {
+            var requestButton = document.getElementById("request-button");
+            requestButton.addEventListener("click", handleRequestButtonClick);
+        });
     </script>
-</head>
-<body>
-    <div class="container">
-        <h2>Staff Advisor's Page</h2>
-        <?php
-        include 'config1.php'; 
-        
-        try {
-          session_start();
-            $FacultyName = $_SESSION['FacultyName'];
 
-            $stmt = $conn->query("SELECT FacultyName FROM faculty where faculty.FacultyName={$FacultyName}");
-            $FacultyName = $stmt->fetchColumn();
-        } catch(PDOException $e) {
-            echo "Error: " . $e->getMessage();
-        }
-        $conn = null;
-        ?>
-
-        <p>Faculty's Name: <?php echo $FacultyName; ?></p>
-
-        <p>Designation: Staff Advisor</p>
-
-        <div class="sections-container">
-            <div class="section">
-                <button class="button button-request" onclick="handleRequestButtonClick()">Request</button>
-                <button class="button button-approved">Approved</button>
-                <button class="button button-add">Add Student</button>
-                <button class="button button-remove">Remove Student</button>
-            </div>
-
-            <div class="section">
-                <div class="section-heading"><center>Current Sem Report</center></div>
-                <button class="button button-view">View Student List</button>
-                <button class="button button-view">View Attendance</button>
-            </div>
-
-            <div class="section">
-                <?php
-                $semesters = array('Sem 1', 'Sem 2', 'Sem 3', 'Sem 4', 'Sem 5', 'Sem 6', 'Sem 7', 'Sem 8');
-                foreach ($semesters as $semester) {
-                    echo '<button class="button button-sem">' . $semester . '</button>';
-                }
-                ?>
-            </div>
-        </div>
-    </div>
-</body>
 </html>
