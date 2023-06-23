@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Principal Report</title>
     <style>
-        /* CSS styles here */
-        
         body {
             font-family: Arial, sans-serif;
             background-color: #f2f2f2;
@@ -61,20 +59,18 @@
         }
 
         a.logout {
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: #f44336;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    text-decoration: none;
-}
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #f44336;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            text-decoration: none;
+        }
 
-a.logout:hover {
-    background-color: #d32f2f;
-}
-
-    
+        a.logout:hover {
+            background-color: #d32f2f;
+        }
     </style>
 </head>
 <body>
@@ -96,18 +92,14 @@ a.logout:hover {
         $year = $_POST['year'];
         $view = $_POST['view'];
 
-        // Check if the selected options meet the criteria
-        if ($dept === 'IT' && $year === '1' && $view === 'attendance') {
-            // Redirect to hod_attendance_view.php
-            header("Location: hod_attendence_view.php");
-            exit();
-        } 
+        if ($view === 'leave') {
+            "handleRequestButtonClick()";
+        }
     }
     ?>
 
     <h1>Welcome, <?php echo $p_name; ?></h1>
-    
-    
+
     <form method="post">
         <label for="dept">Select Department:</label>
         <select name="dept" id="dept">
@@ -137,5 +129,65 @@ a.logout:hover {
 
     <a href="logout.php" class="logout">Logout</a>
 
+    <script>
+          document.addEventListener("DOMContentLoaded", function () {
+              function handleRequestButtonClick() {
+                  // Create a space to display the request list
+                  var requestList = document.createElement("div");
+                  requestList.id = "request-list";
+
+                  // Make an AJAX request to fetch the list of students who applied for duty leave
+                  var xhr = new XMLHttpRequest();
+                  xhr.open("GET", "leavefinal.php", true);
+                  xhr.onreadystatechange = function () {
+                      if (xhr.readyState === 4 && xhr.status === 200) {
+                          var response = JSON.parse(xhr.responseText);
+
+                          if (Array.isArray(response)) {
+                              response.forEach(function (student) {
+                                  var studentButton = document.createElement("button");
+                                  studentButton.className = "button button-student";
+                                  studentButton.innerHTML = student.RegNo;
+                                  studentButton.onclick = function () {
+                                      handleStudentButtonClick(student.RegNo);
+                                  };
+                                  requestList.appendChild(studentButton);
+                              });
+
+                              // Append the request list to the document body
+                              document.body.appendChild(requestList);
+                          } else {
+                              console.error("Invalid response from leavefinal.php");
+                          }
+                      }
+                  };
+                  xhr.send();
+              }
+
+              function handleStudentButtonClick(RegNo) {
+                  // Redirect to the duty leave approval page with the selected student's TRV ID
+                  window.location.href = "approval.php?RegNo=" + encodeURIComponent(RegNo) + "&id=" + encodeURIComponent(id);
+              }
+
+              // Get the form element
+              var reportForm = document.querySelector('form');
+
+              // Attach a submit event listener to the form
+              reportForm.addEventListener('submit', function (event) {
+                  event.preventDefault(); // Prevent the default form submission
+
+                  var view = document.getElementById('view').value;
+
+                  if (view === 'leave') {
+                      handleRequestButtonClick();
+                  }
+
+                  // Perform any other desired actions or form validation here
+
+                  // Submit the form
+                  reportForm.submit();
+              });
+          });
+      </script>
 </body>
 </html>

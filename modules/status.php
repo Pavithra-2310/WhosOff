@@ -23,8 +23,16 @@ if ($result->rowCount() > 0) {
     if ($status == 0) {
         echo "<marquee><h2>Duty Leave Not Approved</h2></marquee>";
     } elseif ($status == 1) {
-        echo "Approved";
-    } else {
+        echo "<marquee><h2>Approved by staff Advisor</h2></marquee>";
+    }elseif ($status == 2) {
+        echo "Approved by  HOD";
+} elseif ($status == 3) {
+        echo "<marquee><h2>Approved by  Princhipal</h2></marquee>";
+	echo "<marquee><h2>Duty Leave Sanctioned</h2></marquee>"; 
+} 
+
+
+else {
         echo "Status Unknown";
     }
 } else {
