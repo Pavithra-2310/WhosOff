@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Duty Leave Approval-HOD</title>
+    <title>Duty Leave Approval-Principle</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -56,9 +56,10 @@
   <?php
 
   include 'config1.php';
-  if(isset($_GET['regNo']) && isset($_GET['dutyLeaveId'])) {
-        $RegNo = $_GET['regNo'];
-        $id = $_GET['dutyLeaveId'];
+
+  if(isset($_GET['RegNo']) && isset($_GET['id'])) {
+      $RegNo = $_GET['RegNo'];
+      $id = $_GET['id'];
 
       // Fetch student details from the database based on Register Number
       $sql = "SELECT student.*, branch.BranchName
@@ -118,7 +119,7 @@ echo "<p><a href='uploads/" . $dutyLeave['file_name'] . "' target='_blank'>View 
       }
 
       echo "<div class='button-container'>";
-      if($dutyLeave['status'] === 1) {
+      if($dutyLeave['status'] === 2) {
           echo "<form method='POST' style='display: inline-block;'>";
           echo "<input type='hidden' name='action' value='approve'>";
           echo "<button class='green-button' type='submit'>Approve</button>";
@@ -128,7 +129,7 @@ echo "<p><a href='uploads/" . $dutyLeave['file_name'] . "' target='_blank'>View 
           echo "<button class='red-button' type='submit'>Reject</button>";
           echo "</form>";
       }
-      if($dutyLeave['status'] === 2) {
+      if($dutyLeave['status'] === 3) {
           echo "<form method='POST' style='display: inline-block;'>";
           echo "<input type='hidden' name='action' value='update_dates'>";
           echo "<button type='submit'>Update Dates</button>";
@@ -143,12 +144,12 @@ echo "<p><a href='uploads/" . $dutyLeave['file_name'] . "' target='_blank'>View 
 
       if($action === 'approve') {
           // Update the duty leave status as approved
-          $sql = "UPDATE duty_leave SET status = '2' WHERE id = ?";
+          $sql = "UPDATE duty_leave SET status = '3' WHERE id = ?";
           $stmt = $conn->prepare($sql);
           $stmt->execute([$id]);
 
           echo "Duty leave approved.";
-      } elseif($action === '-1') {
+      } elseif($action === 'reject') {
           // Update the duty leave status as rejected
           $sql = "UPDATE duty_leave SET status = '-1' WHERE id = ?";
           $stmt = $conn->prepare($sql);
