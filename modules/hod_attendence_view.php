@@ -83,5 +83,8 @@ include 'config1.php';
     }
 
 ?>
+<form action="logout.php" method="post">
+    <button type="submit">Logout</button>
+</form>
 </body>
 </html>

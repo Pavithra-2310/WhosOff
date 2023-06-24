@@ -213,7 +213,10 @@
             $stmt = $conn->prepare($sql);
             $stmt->execute([$id]);
   
-            echo "Duty leave approved.";
+            echo "Duty leave approved.";}}
             ?>
+            <form action="logout.php" method="post">
+    <button type="submit">Logout</button>
+</form>
 </body>
 </html>

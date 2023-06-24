@@ -92,5 +92,8 @@
         <input type="submit" value="Add Student">
     </form>
 </body>
+<form action="logout.php" method="post">
+    <button type="submit">Logout</button>
+</form>
 </html>
 

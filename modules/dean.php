@@ -141,8 +141,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <input type="submit" name="submit" value="Generate Report">
     </form>
 
-    <a href="logout.php" class="logout">Logout</a>
-
+   
+    <form action="logout.php" method="post">
+    <button type="submit">Logout</button>
+</form>
 </body>
 </html>
 

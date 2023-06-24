@@ -55,6 +55,7 @@
     <h2>Staff Advisor's Page</h2>
     <?php
     include 'config1.php';
+    
 
     session_start();
     $FacultyName = $_SESSION['FacultyName'];
@@ -154,5 +155,7 @@
             requestButton.addEventListener("click", handleRequestButtonClick);
         });
     </script>
-
+<form action="logout.php" method="post">
+    <button type="submit">Logout</button>
+</form>
 </html>
