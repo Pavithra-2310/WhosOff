@@ -143,7 +143,7 @@ echo "<p><a href='uploads/" . $dutyLeave['file_name'] . "' target='_blank'>View 
 
       if($action === 'approve') {
           // Update the duty leave status as approved
-          $sql = "UPDATE duty_leave SET status = '1' WHERE id = ?";
+          $sql = "UPDATE duty_leave SET status = '2' WHERE id = ?";
           $stmt = $conn->prepare($sql);
           $stmt->execute([$id]);
 

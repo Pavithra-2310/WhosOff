@@ -8,7 +8,7 @@ try {
     // Fetch RegNo, duty_leave IDs, and Branch IDs from the duty_leave, student, and student_relation tables
     $stmt = $conn->prepare("SELECT duty_leave.RegNo, duty_leave.id FROM duty_leave
                             INNER JOIN student ON duty_leave.RegNo = student.RegNo
-                            INNER JOIN student_relation ON student.sid = student_relation.sid WHERE duty_leave.status = 2");
+                            INNER JOIN student_relation ON student.sid = student_relation.sid WHERE duty_leave.status = 3");
     $stmt->execute();
     $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 

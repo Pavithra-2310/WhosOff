@@ -3,7 +3,6 @@
 <head>
     <title>Student Profile</title>
     <style>
-        /* Add some basic styling */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -36,19 +35,51 @@
         .attendance-section {
             margin-top: 20px;
             text-align: center;
+            padding: 10px;
         }
 
         .attendance-section button {
             margin: 5px;
             padding: 10px 20px;
             font-size: 16px;
+            background-color: #f0f0f0;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .attendance-section button:hover {
+            background-color: #e0e0e0;
+        }
+
+        .duty-leave-box {
+            border: 1px solid #ccc;
+            padding: 10px;
+            background-color: #fff;
+            margin-top: 10px;
         }
 
         .duty-leave-button {
-            display: block;
-            margin-top: 20px;
+            margin-top: 10px;
             text-align: left;
+        }
 
+        .duty-leave-button form {
+            display: inline-block;
+        }
+
+        .duty-leave-button input[type="submit"] {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #ff0000;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .duty-leave-button input[type="submit"]:hover {
+            background-color: #cc0000;
         }
     </style>
 </head>
@@ -60,13 +91,12 @@
     session_start();
 
     $regno = $_SESSION['RegNo'];
-    // Query to retrieve student data
+
+    // Retrieve student information
     $sql = "SELECT * FROM student WHERE student.RegNo = '{$regno}'";
     $result = $conn->query($sql);
 
-    // Check if there are any rows in the result
     if ($result->rowCount() > 0) {
-        // Fetch the first row (assuming there's only one student)
         $student = $result->fetch(PDO::FETCH_ASSOC);
 
         // Display student profile details
@@ -79,53 +109,63 @@
         echo "<tr><th>Phone Number</th><td>" . $student['PhoneNo'] . "</td></tr>";
         echo "<tr><th>Register Number</th><td>" . $student['RegNo'] . "</td></tr>";
         echo "</table>";
-    } else {
-        echo "No student data found.";
-    }
-    ?>
 
-    <div class="attendance-section">
-        <h2>Attendance Percentage</h2>
-        <?php
-        // Query to retrieve courses for the student's branch
+        // Retrieve courses for the student's branch
         $studentId = $student['sid'];
-        $courseQuery = "SELECT c.CourseCode FROM course c JOIN student_relation s ON c.BranchId = s.Branchid WHERE s.SID = '{$studentId}'";
+        $courseQuery = "SELECT c.CourseCode, AVG(a.ispresent) AS AttendancePercentage FROM course c JOIN student_relation s ON c.BranchId = s.Branchid JOIN attendance a ON c.CourseId = a.CourseId WHERE s.SID = '{$studentId}' GROUP BY c.CourseCode";
         $courseResult = $conn->query($courseQuery);
 
         if ($courseResult->rowCount() > 0) {
-            // Fetch and display course codes
             while ($course = $courseResult->fetch(PDO::FETCH_ASSOC)) {
-                echo "<button onclick='getAttendancePercentage(\"" . $course['CourseCode'] . "\")'>" . $course['CourseCode'] . "</button>";
+                $attendancePercentage = round($course['AttendancePercentage'] * 100, 2);
+                echo "<div class='attendance-section'>";
+                echo "<button onclick='getAttendancePercentage(\"" . $course['CourseCode'] . "\")'>" . $course['CourseCode'] . " - Attendance: " . $attendancePercentage . "%</button>";
+
+                // Check if attendance is less than 75%
+                if ($attendancePercentage < 75) {
+                    // Check duty leave status
+                    $dutyLeaveQuery = "SELECT * FROM duty_leave INNER JOIN student ON student.RegNo = duty_leave.RegNo INNER JOIN student_relation ON student.sid = student_relation.sid INNER JOIN course ON course.BranchId = student_relation.Branchid WHERE student.RegNo = '{$regno}' AND course.CourseCode = '{$course['CourseCode']}'";
+                    $dutyLeaveResult = $conn->query($dutyLeaveQuery);
+
+                    if ($dutyLeaveResult->rowCount() > 0) {
+                        $dutyLeave = $dutyLeaveResult->fetch(PDO::FETCH_ASSOC);
+                        if ($dutyLeave['status'] == 1) {
+                            echo "<div class='duty-leave-box'>";
+                            echo "<div class='duty-leave-button'>";
+                            echo "<form action='status.php' method='POST'>";
+                            echo "<input type='submit' value='View Status'/>";
+                            echo "</form>";
+                            echo "</div>";
+                            echo "</div>";
+                        } else {
+                            echo "<div class='duty-leave-box'>";
+                            echo "<div class='duty-leave-button'>";
+                            echo "<form action='dutyleave.php' method='POST'>";
+                            echo "<input type='submit' value='Apply For Duty Leave'/>";
+                            echo "</form>";
+                            echo "</div>";
+                            echo "</div>";
+                        }
+                    } else {
+                        echo "<div class='duty-leave-box'>";
+                        echo "<div class='duty-leave-button'>";
+                        echo "<form action='dutyleave.php' method='POST'>";
+                        echo "<input type='submit' value='Apply For Duty Leave'/>";
+                        echo "</form>";
+                        echo "</div>";
+                        echo "</div>";
+                    }
+                }
+
+                echo "</div>";
             }
         } else {
             echo "No courses found for the student's branch.";
         }
-        ?>
-
-        <div id="attendanceResult"></div>
-
-        <script>
-            function getAttendancePercentage(courseCode) {
-                var xhr = new XMLHttpRequest();
-                xhr.onreadystatechange = function() {
-                    if (xhr.readyState === 4 && xhr.status === 200) {
-                        document.getElementById("attendanceResult").innerHTML = xhr.responseText;
-                    }
-                };
-                xhr.open("GET", "getAttendance.php?courseCode=" + courseCode, true);
-                xhr.send();
-            }
-        </script>
-    </div>
-
-    <div class="duty-leave-button">
-        <form action="dutyleave.php" method="POST">
-            <input type="submit" value="Apply For Duty Leave"/>
-        </form>
-        <form action="status.php" method="POST">
-            <input type="submit" value="View Status"/>
-        </form>
-    </div>
+    } else {
+        echo "No student data found.";
+    }
+    ?>
 
 </body>
 </html>

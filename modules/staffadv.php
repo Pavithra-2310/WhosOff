@@ -89,8 +89,8 @@
         <div class="section">
             <button id="request-button" class="button button-request">Request</button>
             <button class="button button-approved">Approved</button>
-            <button class="button button-add">Add Student</button>
-            <button class="button button-remove">Remove Student</button>
+            <a href="add_student.php"><button class="button button-add">Add Student</button></a>
+            <a href="remove_student.php"><button class="button button-remove">Remove Student</button></a>
         </div>
 
         <div class="section">

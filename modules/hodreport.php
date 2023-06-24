@@ -105,7 +105,7 @@
 
         function handleStudentButtonClick(regNo, dutyLeaveId) {
             // Redirect to the duty leave approval page with the selected student's regNo and dutyLeaveId
-            window.location.href = "approval.php?regNo=" + encodeURIComponent(regNo) + "&dutyLeaveId=" + encodeURIComponent(dutyLeaveId);
+            window.location.href = "approval-hod.php?regNo=" + encodeURIComponent(regNo) + "&dutyLeaveId=" + encodeURIComponent(dutyLeaveId);
         }
 
         document.addEventListener("DOMContentLoaded", function () {

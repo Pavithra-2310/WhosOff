@@ -11,7 +11,7 @@ try {
             INNER JOIN student_relation ON student.sid = student_relation.sid
             INNER JOIN branch ON student_relation.Branchid = branch.Branchid
             INNER JOIN duty_leave ON student.RegNo = duty_leave.regNo
-            WHERE duty_leave.status = 1";
+            WHERE duty_leave.status =2";
     $stmt = $conn->prepare($sql);
     $stmt->execute();
     $result = $stmt->fetchAll(PDO::FETCH_ASSOC);

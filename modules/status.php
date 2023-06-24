@@ -20,13 +20,13 @@ if ($result->rowCount() > 0) {
     $status = $row['status'];
 
     // Display the corresponding approval status
-    if ($status == 0) {
+    if ($status == 1) {
         echo "<marquee><h2>Duty Leave Not Approved</h2></marquee>";
-    } elseif ($status == 1) {
+    } elseif ($status == 0) {
         echo "<marquee><h2>Approved by staff Advisor</h2></marquee>";
-    }elseif ($status == 2) {
+    }elseif ($status == 3) {
         echo "Approved by  HOD";
-} elseif ($status == 3) {
+} elseif ($status == 4) {
         echo "<marquee><h2>Approved by  Princhipal</h2></marquee>";
 	echo "<marquee><h2>Duty Leave Sanctioned</h2></marquee>"; 
 } 

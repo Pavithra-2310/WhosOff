@@ -200,6 +200,20 @@
                 dateContainer.removeChild(dateField);
             }
         </script>
+
+
     <?php endif; ?>
+    <?php 
+    if(isset($_POST['action'])) {
+        $action = $_POST['action'];
+  
+        if($action === 'submit') {
+            // Update the duty leave status as approved
+            $sql = "UPDATE duty_leave SET status = '2' WHERE id = ?";
+            $stmt = $conn->prepare($sql);
+            $stmt->execute([$id]);
+  
+            echo "Duty leave approved.";
+            ?>
 </body>
 </html>
