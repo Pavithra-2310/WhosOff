@@ -82,6 +82,7 @@
             background-color: #cc0000;
         }
     </style>
+
 </head>
 <body>
     <h1>Student Profile</h1>
@@ -119,42 +120,45 @@
             while ($course = $courseResult->fetch(PDO::FETCH_ASSOC)) {
                 $attendancePercentage = round($course['AttendancePercentage'] * 100, 2);
                 echo "<div class='attendance-section'>";
-                echo "<button onclick='getAttendancePercentage(\"" . $course['CourseCode'] . "\")'>" . $course['CourseCode'] . " - Attendance: " . $attendancePercentage . "%</button>";
-
+                
                 // Check if attendance is less than 75%
                 if ($attendancePercentage < 75) {
                     // Check duty leave status
-                    $dutyLeaveQuery = "SELECT * FROM duty_leave INNER JOIN student ON student.RegNo = duty_leave.RegNo INNER JOIN student_relation ON student.sid = student_relation.sid INNER JOIN course ON course.BranchId = student_relation.Branchid WHERE student.RegNo = '{$regno}' AND course.CourseCode = '{$course['CourseCode']}'";
+                    $dutyLeaveQuery = "SELECT duty_leave.*, course.CourseCode, duty_leave.noOfLeaves FROM duty_leave INNER JOIN student ON student.RegNo = duty_leave.RegNo INNER JOIN student_relation ON student.sid = student_relation.sid INNER JOIN course ON course.BranchId = student_relation.Branchid WHERE student.RegNo = '{$regno}' AND course.CourseCode = '{$course['CourseCode']}'";
+
                     $dutyLeaveResult = $conn->query($dutyLeaveQuery);
 
                     if ($dutyLeaveResult->rowCount() > 0) {
                         $dutyLeave = $dutyLeaveResult->fetch(PDO::FETCH_ASSOC);
-                        if ($dutyLeave['status'] == 1) {
-                            echo "<div class='duty-leave-box'>";
-                            echo "<div class='duty-leave-button'>";
-                            echo "<form action='status.php' method='POST'>";
-                            echo "<input type='submit' value='View Status'/>";
-                            echo "</form>";
-                            echo "</div>";
-                            echo "</div>";
-                        } else {
-                            echo "<div class='duty-leave-box'>";
-                            echo "<div class='duty-leave-button'>";
-                            echo "<form action='dutyleave.php' method='POST'>";
-                            echo "<input type='submit' value='Apply For Duty Leave'/>";
-                            echo "</form>";
-                            echo "</div>";
-                            echo "</div>";
+                        if ($dutyLeave['status'] == 4) {
+                            $noOfLeaves = $dutyLeave['noOfLeaves'];
+                            $attendancePercentage += $noOfLeaves;
+
+                            // Print new attendance with course code
+                            echo "<button onclick='getAttendancePercentage(\"" . $course['CourseCode'] . "\")'>" . $course['CourseCode'] . " - Attendance: " . $attendancePercentage . "%</button>";
+
+                            if ($dutyLeave['status'] != 0) {
+                                echo "<div class='duty-leave-box'>";
+                                echo "<div class='duty-leave-button'>";
+                                echo "<form action='status.php' method='POST'>";
+                                echo "<input type='submit' value='View Status'/>";
+                                echo "</form>";
+                                echo "</div>";
+                                echo "</div>";
+                            } else {
+                                echo "<div class='duty-leave-box'>";
+                                echo "<div class='duty-leave-button'>";
+                                echo "<form action='dutyleave.php' method='POST'>";
+                                echo "<input type='submit' value='Apply For Duty Leave'/>";
+                                echo "</form>";
+                                echo "</div>";
+                                echo "</div>";
+                            }
                         }
-                    } else {
-                        echo "<div class='duty-leave-box'>";
-                        echo "<div class='duty-leave-button'>";
-                        echo "<form action='dutyleave.php' method='POST'>";
-                        echo "<input type='submit' value='Apply For Duty Leave'/>";
-                        echo "</form>";
-                        echo "</div>";
-                        echo "</div>";
                     }
+                } else {
+                    // Print normal attendance with course code
+                    echo "<button onclick='getAttendancePercentage(\"" . $course['CourseCode'] . "\")'>" . $course['CourseCode'] . " - Attendance: " . $attendancePercentage . "%</button>";
                 }
 
                 echo "</div>";
@@ -166,9 +170,10 @@
         echo "No student data found.";
     }
     ?>
+
     <form action="logout.php" method="post">
-    <button type="submit">Logout</button>
-</form>
+        <button type="submit">Logout</button>
+    </form>
 
 </body>
 </html>
