@@ -47,112 +47,38 @@
             width: 200px;
             margin-right: 10px;
         }
-
-        table {
-            border-collapse: collapse;
-            width: 100%;
-        }
-
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-        }
-
-        th {
-            background-color: #f2f2f2;
-            font-weight: bold;
-        }
-
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
     </style>
 </head>
 <body>
     <div class="container">
         <h2>HOD Page</h2>
+ 
+
         <div class="sections-container">
             <div class="section">
                 <button id="duty-leave-button" class="button">Duty Leave Requests</button>
-                <button class="button button-approved">Approved</button>
             </div>
+
             <div class="section">
-                <div class="section-heading">View Attendance</div>
-                <button class="button" onclick="loadAttendance(1, [1, 2])">1st Year</button>
-                <button class="button" onclick="loadAttendance(2, [3, 4])">2nd Year</button>
-                <button class="button" onclick="loadAttendance(3, [5, 6])">3rd Year</button>
-                <button class="button" onclick="loadAttendance(4, [7, 8])">4th Year</button>
+                <div class="section-heading"><center>View Attendance</center></div>
+                <button class="button">1st Year</button>
+                <button class="button">2nd Year</button>
+                
+                <button class="button" onclick="window.location.href = 'hod_attendence_view.php'">3rd Year</button>
+
+                <button class="button">4th Year</button>
             </div>
         </div>
-        <div id="attendance-container"></div>
     </div>
 
     <script>
-        function loadAttendance(year, semesters) {
-            var attendanceContainer = document.getElementById("attendance-container");
-            attendanceContainer.innerHTML = ""; // Clear previous content
-
-            var table = document.createElement("table");
-
-            // Create table headers
-            var thead = document.createElement("thead");
-            var headerRow = document.createElement("tr");
-            var headers = ["Student Name", "Register Number"];
-            semesters.forEach(function (semester) {
-                headers.push("Semester " + semester + " Attendance (%)");
-            });
-            headers.forEach(function (header) {
-                var th = document.createElement("th");
-                th.textContent = header;
-                headerRow.appendChild(th);
-            });
-            thead.appendChild(headerRow);
-            table.appendChild(thead);
-
-            // Fetch and populate attendance data from the server
-            var xhr = new XMLHttpRequest();
-            xhr.open("GET", "fetch_attendance.php?year=" + year + "&semesters=" + semesters.join(","), true);
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    var students = JSON.parse(xhr.responseText);
-
-                    students.forEach(function (student) {
-                        var row = document.createElement("tr");
-                        var nameCell = document.createElement("td");
-                        var regNoCell = document.createElement("td");
-                        var attendanceCells = [];
-
-                        nameCell.textContent = student.name;
-                        regNoCell.textContent = student.regNo;
-
-                        semesters.forEach(function (semester) {
-                            var attendanceCell = document.createElement("td");
-                            attendanceCell.textContent = student.attendance[semester] + "%";
-                            attendanceCells.push(attendanceCell);
-                        });
-
-                        row.appendChild(nameCell);
-                        row.appendChild(regNoCell);
-                        attendanceCells.forEach(function (cell) {
-                            row.appendChild(cell);
-                        });
-
-                        table.appendChild(row);
-                    });
-
-                    attendanceContainer.appendChild(table);
-                }
-            };
-            xhr.send();
-        }
-
         function handleDutyLeaveButtonClick() {
             // Create a space to display the request list
             var requestList = document.createElement("div");
             requestList.id = "request-list";
 
             // Make an AJAX request to fetch the list of students with approved duty leave
-            var xhr = new XMLHttpRequest();
+           var xhr = new XMLHttpRequest();
             xhr.open("GET", "leave_details.php", true);
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4 && xhr.status === 200) {
@@ -181,7 +107,7 @@
 
         function handleStudentButtonClick(regNo, dutyLeaveId) {
             // Redirect to the duty leave approval page with the selected student's regNo and dutyLeaveId
-            window.location.href = "approval-hod.php?regNo=" + encodeURIComponent(regNo) + "&dutyLeaveId=" + encodeURIComponent(dutyLeaveId);
+            window.location.href = "approval.php?regNo=" + encodeURIComponent(regNo) + "&dutyLeaveId=" + encodeURIComponent(dutyLeaveId);
         }
 
         document.addEventListener("DOMContentLoaded", function () {
@@ -190,7 +116,7 @@
         });
     </script>
     <form action="logout.php" method="post">
-        <button type="submit">Logout</button>
-    </form>
+    <button type="submit">Logout</button>
+</form>
 </body>
 </html>

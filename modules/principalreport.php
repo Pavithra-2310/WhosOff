@@ -127,7 +127,7 @@
         <input type="submit" name="submit" value="Generate Report">
     </form>
 
-    <a href="logout.php" class="logout">Logout</a>
+   
 
     <script>
     document.addEventListener("DOMContentLoaded", function () {

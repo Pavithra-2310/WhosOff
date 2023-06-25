@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FIRST YEAR</title>
+    <title>THIRD YEAR</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -49,24 +49,41 @@
     </style>
 </head>
 <body>
-    <h1>Report of 1st year</h1>
-<?php
+    <h1>Report of 3rd year</h1>
+    <?php
 include 'config1.php';
 
+try {
+    $conn = new PDO('mysql:host=' . $databaseHost . ';dbname=' . $databaseName . '', $databaseUsername, $databasePassword);
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
+    // Get the list of course names
+    $courseQuery = "SELECT DISTINCT CourseName FROM course";
+    $courseResult = $conn->query($courseQuery);
+    $courses = $courseResult->fetchAll(PDO::FETCH_COLUMN);
 
-    // Assuming the table name is 'student', adjust it if needed
-    $query = "SELECT FName, LName, RegNo FROM student WHERE ayid = 1";
+    // Generate the dynamic SQL query
+    $query = "SELECT s.FName, s.LName, s.RegNo";
+    foreach ($courses as $course) {
+        $query .= ", IFNULL((SELECT sum(a.ispresent) FROM attendance a WHERE a.sid = s.sid AND a.CourseId IN (SELECT CourseId FROM course WHERE CourseName = '$course')) / (SELECT COUNT(*) FROM attendance a WHERE a.sid = s.sid AND a.CourseId IN (SELECT CourseId FROM course WHERE CourseName = '$course')) * 100, 'No classes taken') AS `$course`";
+    }
+    $query .= " FROM student s 
+    INNER JOIN student_relation sr ON s.sid = sr.sid 
+    WHERE sr.Branchid = 1";
+
     $result = $conn->query($query);
 
     // Check if there are any rows returned
     if ($result->rowCount() > 0) {
         echo '<table>';
-        echo '<tr>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Registration Number</th>
-              </tr>';
+        echo '<tr>';
+        echo '<th>First Name</th>';
+        echo '<th>Last Name</th>';
+        echo '<th>Registration Number</th>';
+        foreach ($courses as $course) {
+            echo "<th>$course</th>";
+        }
+        echo '</tr>';
 
         // Fetch the data and display it
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -74,6 +91,9 @@ include 'config1.php';
             echo '<td>' . $row['FName'] . '</td>';
             echo '<td>' . $row['LName'] . '</td>';
             echo '<td>' . $row['RegNo'] . '</td>';
+            foreach ($courses as $course) {
+                echo '<td>' . $row[$course] . '</td>';
+            }
             echo '</tr>';
         }
 
@@ -81,10 +101,7 @@ include 'config1.php';
     } else {
         echo '<p>No student data found.</p>';
     }
-
+} catch (PDOException $e) {
+    echo "Connection failed: " . $e->getMessage();
+}
 ?>
-<form action="logout.php" method="post">
-    <button type="submit">Logout</button>
-</form>
-</body>
-</html>
