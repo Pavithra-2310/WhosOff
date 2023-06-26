@@ -1,218 +1,320 @@
+<!doctype html>
+ <html class="no-js " lang="en"> 
+<head>
+
+    <!-- Basic -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    
+    <!-- Mobile Meta -->
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <!-- Site Meta -->
+    <title>WhosOff</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    
+    <!-- Site Icons -->
+    <link rel="shortcut icon" href="images/college_logo.png" type="image/x-icon" />
+    <link rel="apple-touch-icon" href="images/college_logo.png">
+
+	<!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,500,700,900" rel="stylesheet"> 
+    <link href="https://fonts.googleapis.com/css?family=Droid+Serif:400,400i,700,700i" rel="stylesheet"> 
+	
+    <!-- Custom & Default Styles -->
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/carousel.css">
+    <link rel="stylesheet" href="css/animate.css">
+   
+   
+<style>
+  @font-face {
+    font-family: "Flaticon";
+    src: url("fonts/Flaticon.eot");
+    src: url("fonts/Flaticon.eot?#iefix") format("embedded-opentype"), url("fonts/Flaticon.woff") format("woff"), url("fonts/Flaticon.ttf") format("truetype"), url("fonts/Flaticon.svg#Flaticon") format("svg");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+    @font-face {
+        font-family: "Flaticon";
+        src: url("fonts/Flaticon.svg#Flaticon") format("svg");
+    }
+}
+
+body {
+  margin: 0px;
+  padding: 0px;
+}
+
+.img-section {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  background-image: url("images/clg2.jpeg");
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  margin: 0;
+  padding: 0;
+}
+
+.img-section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  filter: brightness(30%);
+}
 
 
+      h1{
+        color:antiquewhite;
+      }
+      
 
-<div class="container">
-  
-  <div class="row">
-    <div class="col-md-6 col-md-offset-3 col-lg-6 text-center">
-      <h3>Principal's Section</h3>
-    </div>
-  </div>
-  <?php if(isset($_GET['principal'])) : ?> 
-    <div class="row">
-      <div class="col-md-6 col-md-offset-3 col-lg-6 no-column-padding">
-        <div class="form-group alert alert-dismissible alert-danger">
-          <button type="button" class="close" data-dismiss="alert">×</button>
-          <strong>Sorry!</strong> Invalid Principal Username or Password.
-        </div>
-      </div>
-    </div>
-  <?php endif; ?>
-  <div class="row">
-    <div class="col-md-6 col-md-offset-3 col-lg-6">
-      <form class="form-horizontal" id="principalForm" action="modules/principal_verify.php" method="post" data-toggle="validator">
-        <div class="form-group">
-          <label for="principalUsername" class="control-label">Username</label>
-          <input type="text" class="form-control" id="principalUsername" name="name" maxlength="16" placeholder="Username" required>
-        </div>
-        <div class="form-group">
-          <label for="principalPassword" class="control-label">Password</label>
-          <input type="password" class="form-control" id="principalPassword" name="pass" maxlength="16" placeholder="Password" required>
-        </div>
-        <div class="form-group">
-          <input type="submit" name="submit" class="btn btn-primary btn-block" value="Sign in">
-        </div>
-      </form>
-    </div>
-  </div>
-  <hr class="col-md-offset-3 col-md-6" />
-  
-  <!-- Dean's Section -->
-  <div class="row">
-    <div class="col-md-6 col-md-offset-3 col-lg-6 text-center">
-      <h3>Dean's Section</h3>
-    </div>
-  </div>
-  <?php if(isset($_GET['dean'])) : ?>
-    <div class="row">
-      <div class="col-md-6 col-md-offset-3 col-lg-6 no-column-padding">
-        <div class="form-group alert alert-dismissible alert-danger">
-          <button type="button" class="close" data-dismiss="alert">×</button>
-          <strong>Sorry!</strong> Invalid Dean Username or Password.
-        </div>
-      </div>
-    </div>
-  <?php endif; ?>
-  <div class="row">
-    <div class="col-md-6 col-md-offset-3 col-lg-6">
-      <form class="form-horizontal" id="deanForm" action="modules/dean_verify.php" method="post" data-toggle="validator">
-        <div class="form-group">
-          <label for="deanUsername" class="control-label">Username</label>
-          <input type="text" class="form-control" id="deanUsername" name="name" maxlength="16" placeholder="Username" required>
-        </div>
-        <div class="form-group">
-          <label for="deanPassword" class="control-label">Password</label>
-          <input type="password" class="form-control" id="deanPassword" name="pass" maxlength="16" placeholder="Password" required>
-        </div>
-        <div class="form-group">
-          <input type="submit" name="submit" class="btn btn-info btn-block" value="Sign in">
-        </div>
-      </form>
-    </div>
-  </div>
-  <hr class="col-md-offset-3 col-md-6" />
-  
-  <!-- HOD's Section -->
-  <div class="row">
-    <div class="col-md-6 col-md-offset-3 col-lg-6 text-center">
-      <h3>HOD's Section</h3>
-    </div>
-  </div>
-  <?php if(isset($_GET['hod'])) : ?>
-    <div class="row">
-      <div class="col-md-6 col-md-offset-3 col-lg-6 no-column-padding">
-        <div class="form-group alert alert-dismissible alert-danger">
-          <button type="button" class="close" data-dismiss="alert">×</button>
-          <strong>Sorry!</strong> Invalid HOD Username or Password.
-        </div>
-      </div>
-    </div>
-  <?php endif; ?>
-  <div class="row">
-    <div class="col-md-6 col-md-offset-3 col-lg-6">
-      <form class="form-horizontal" id="hodForm" action="modules/verifyhod.php" method="post" data-toggle="validator">
-        <div class="form-group">
-          <label for="hodUsername" class="control-label">Username</label>
-          <input type="text" class="form-control" id="hodUsername" name="name" maxlength="16" placeholder="Username" required>
-        </div>
-        <div class="form-group">
-          <label for="hodPassword" class="control-label">Password</label>
-          <input type="password" class="form-control" id="hodPassword" name="pass" maxlength="16" placeholder="Password" required>
-        </div>
-        <div class="form-group">
-          <input type="submit" name="submit" class="btn btn-default btn-block" value="Sign in">
-        </div>
-      </form>
-    </div>
-  </div>
-  <hr class="col-md-offset-3 col-md-6" />
-  
-  <!-- Staff Advisor's Section -->
-  <div class="row">
-    <div class="col-md-6 col-md-offset-3 col-lg-6 text-center">
-      <h3>Staff Advisor's Section</h3>
-    </div>
-  </div>
-  <?php if(isset($_GET['staffadvisor'])) : ?>
-    <div class="row">
-      <div class="col-md-6 col-md-offset-3 col-lg-6 no-column-padding">
-        <div class="form-group alert alert-dismissible alert-danger">
-          <button type="button" class="close" data-dismiss="alert">×</button>
-          <strong>Sorry!</strong> Invalid Staff Advisor Username or Password.
-        </div>
-      </div>
-    </div>
-  <?php endif; ?>
-  <div class="row">
-    <div class="col-md-6 col-md-offset-3 col-lg-6">
-      <form class="form-horizontal" id="staffadvisorForm" action="modules/staffverify.php" method="post" data-toggle="validator">
-        <div class="form-group">
-          <label for="staffadvisorUsername" class="control-label">Username</label>
-          <input type="text" class="form-control" id="staffadvisorUsername" name="name" maxlength="16" placeholder="Username" required>
-        </div>
-        <div class="form-group">
-          <label for="staffadvisorPassword" class="control-label">Password</label>
-          <input type="password" class="form-control" id="staffadvisorPassword" name="pass" maxlength="16" placeholder="Password" required>
-        </div>
-        <div class="form-group">
-          <input type="submit" name="submit" class="btn btn-default btn-block" value="Sign in">
-        </div>
-      </form>
-    </div>
-  </div>
-  <hr class="col-md-offset-3 col-md-6" />
-  
-  <!-- Faculty's Section -->
+.section {
+    background-color: #ffffff;
+    padding: 8rem 0;
+    position: relative;
+    display: block;
+}
 
-  <div class="row">
-    <div class="col-md-6 col-md-offset-3 col-lg-6 text-center">
-      <h3>Faculty's Section</h3>
-     </div>
-  </div>
-  <div class="row">
-    <?php if(isset($_GET['invalid'])) : ?>
-      <div class="col-md-6 col-md-offset-3 col-lg-6 no-column-padding">
-        <div class="form-group alert alert-dismissible alert-danger">
-          <button type="button" class="close" data-dismiss="alert">×</button>
-          <strong>Sorry!</strong> Invalid Username Or Password.
-        </div>
-      </div>
-    <?php endif; ?>
-
-    <div class="col-md-6 col-md-offset-3 col-lg-6">
-      <form class="form-horizontal" id="teacherForm" action="modules/verify.php" method="post" data-toggle="validator">
-        <div class="form-group">
-          <label for="inputEmail3" class="control-label">Username</label>
-          <input type="text" class="form-control" id="inputEmail3" name="name" maxlength="16" placeholder="Username" required>
-        </div>
-        <div class="form-group">
-          <label for="inputPassword3" class="control-label">Password</label>
-          <input type="password" class="form-control" id="inputPassword3" name="pass" maxlength="16" placeholder="Password" required>
-        </div>
-        <div class="form-group">
-          <input type="submit" name="submit" class="btn btn-info btn-block" value="Sign in">
-        </div>
-      </form>
-    </div>
-  </div>
-  <hr class="col-md-offset-3 col-md-6" />
-  <div class="row">
-    <div class="col-md-6 col-md-offset-3 col-lg-6 text-center">
+.section-title {
+    margin-bottom: 45px;
+}
 
 
-  <!-- Student's Section -->
+.section-title p {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0;
+    font-size: 16px;
+    font-family: 'Droid Serif', sans-serif;
+    font-style: italic;
+}
+
+.section.gb {
+    background-color: #f6f6f6;
+}
+
+.section.db {
+    background-color: #000000;
+}
+.home-text-wrapper {
+    display: table;
+    width: 100%;
+    height: 100%;
+    max-width: 900px;
+    position: relative;
+    text-align: center;
+    z-index: 11;
+}
+
+.home-content {
+    position: relative;
+}
+
+.home-message {
+    display: table-cell;
+    height: 100%;
+    vertical-align: middle;
+}
+
+.home-message p {
+    font-size: 54px;
+    color: white;
+    padding: 0;
+    margin: 0;
+    font-weight: 700;
+}
+
+.home-message small {
+    font-size: 16px;
+    font-family: 'Droid Serif', sans-serif;
+    font-style: italic;
+    display: block;
+    padding: 20px 0 35px;
+    margin: 0;
+    color:white;
+}
+
+.section.footer {
+    width:1530px;
+    background-color: #000
+}
+
+.loader {
+    display: block;
+    margin: 20px auto 0;
+    vertical-align: middle;
+}
+
+#preloader {
+    width: 100%;
+    height: 100%;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: #fff;
+    z-index: 11000;
+    position: fixed;
+    display: block
+}
+
+.preloader {
+    position: absolute;
+    margin: 0 auto;
+    left: 1%;
+    right: 1%;
+    top: 47%;
+    width: 65px;
+    height: 65px;
+    background: center center no-repeat none;
+    background-size: 65px 65px;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    -ms-border-radius: 50%;
+    -o-border-radius: 50%;
+    border-radius: 50%
+}
+@media (max-width: 992px) {
+    
+    .container {
+        min-width: 100% !important;
+    }
+    
+}
+
+@media (max-width: 768px) {
+    
+    .home-message p {
+        font-size: 28px;
+    }
+    
+}
+
+    
 
 
-  <div class="row">
-    <div class="col-md-6 col-md-offset-3 col-lg-6 text-center">
-      <h3>Student's Section</h3>
-    </div>
-  </div>
-  <?php if(isset($_GET['invalid'])) : ?>
-    <div class="row">
-      <div class="col-md-6 col-md-offset-3 col-lg-6 no-column-padding">
-        <div class="form-group alert alert-dismissible alert-danger">
-          <button type="button" class="close" data-dismiss="alert">×</button>
-          <strong>Sorry!</strong> Invalid Student Reg No or Password.
-        </div>
-      </div>
-    </div>
-  <?php endif; ?>
-  <div class="row">
-    <div class="col-md-6 col-md-offset-3 col-lg-6">
-      <form class="form-horizontal" action="modules/verifystud.php" method="post" id="studentForm" data-toggle="validator">
-        <div class="form-group">
-          <label for="RegNo" class="control-label">KTU Registation No.</label>
-          <input type="text" class="form-control" id="RegNo"  name="RegNo" placeholder="Reg No." required>
-        </div>
-<div class="form-group">
-          <label for="inputPassword3" class="control-label">Password</label>
-          <input type="password" class="form-control" id="studPassword3" name="pass" maxlength="16" placeholder="Password" required>
-        </div>
-        <div class="form-group">
-          <input type="submit" name="submit" class="btn btn-default btn-block" value="Sign in">
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
+form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 30px;
+    }
+
+    button {
+      padding: 15px 30px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      background-color: #555555;
+      color: #fff;
+      transition: background-color 0.3s ease;
+      width: 200px;
+    }
+
+    button:hover {
+      background-color: #333333;
+    }
+
+</style>
+</head>
+<body>  
+<?php 
+include 'nav.php';
+?>
+    <!-- LOADER -->
+    <div id="preloader">
+        <img class="preloader" src="images/loader.gif" alt="">
+    </div><!-- end loader -->
+    <!-- END LOADER -->
+
+    <div id="wrapper">
+        
+        
+
+        <section id="home" class="img-section">
+            <div class="overlay"></div>
+            <div class="home-text-wrapper relative container">
+                <div class="home-message">
+                    
+                    <p>WhosOff</p>
+                    <h1>Leave Management System</h1>
+                    <small>Whosoff is a robust PHP-based leave management system designed to simplify and automate the process of managing student leaves, providing an efficient solution for tracking and approving duty leave requests within organizations.</small>
+                    
+                </div>
+            </div>
+            
+        </section>
+
+       
+       
+
+        
+
+        <footer class="section footer noover">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-4 col-md-4">
+                    <h1>Select the Admin Type</h1>
+
+<form>
+   <button type="button" onclick="redirectToPrin()">Principal</button> 
+   <button type="button" onclick="redirectTodd()">DEAN</button> 
+   <button type="button" onclick="redirectTohh()">HOD</button>
+   <button type="button" onclick="redirectTost()">Staff Advisor</button>
+  <button type="button" onclick="redirectToss()">Student</button>
+</form></div><!-- end col -->
+
+                    
+</div></div>
+
+<script>
+  function redirectToPrin() {
+    window.location.href = "modules/prin.php";
+  }
+
+  function redirectTodd() {
+    window.location.href = "modules/dd.php";
+  }
+
+  function redirectTohh() {
+    window.location.href = "modules/hh.php";
+  }
+
+  function redirectTost() {
+    window.location.href = "modules/ss.php";
+  }
+
+  function redirectToss() {
+    window.location.href = "modules/st.php";
+  }
+</script>
+                    
+                    
+       
+
+                    
+    <!-- jQuery Files -->
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/carousel.js"></script>
+    <script src="js/animate.js"></script>
+    <script src="js/custom.js"></script>
+    <!-- VIDEO BG PLUGINS -->
+    
+
+</body>
+</html>

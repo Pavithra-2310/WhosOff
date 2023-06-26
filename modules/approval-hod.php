@@ -50,11 +50,41 @@
         .button-container button {
             margin-right: 10px;
         }
+        #logout{
+            float: right;
+        }
+        nav {
+            background-color: #333;
+            color: #fff;
+            float:right;
+        }
+
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        nav ul li {
+            display: inline-block;
+            
+        }
+
+        nav ul li a {
+            display: block;
+            padding: 10px 20px;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        nav ul li a:hover {
+            background-color: #555;
+        }
     </style>
 </head>
 <body>
   <?php
-
+    include 'nav.php';
   include 'config1.php';
   if(isset($_GET['regNo']) && isset($_GET['dutyLeaveId'])) {
         $RegNo = $_GET['regNo'];
@@ -160,8 +190,6 @@ echo "<p><a href='uploads/" . $dutyLeave['file_name'] . "' target='_blank'>View 
   ?>
 
     </div>
-    <form action="logout.php" method="post">
-    <button type="submit">Logout</button>
-</form>
+    
 </body>
 </html>

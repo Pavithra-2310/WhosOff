@@ -47,9 +47,39 @@
             width: 200px;
             margin-right: 10px;
         }
+        nav {
+            background-color: #333;
+            color: #fff;
+            float:right;
+        }
+
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        nav ul li {
+            display: inline-block;
+            
+        }
+
+        nav ul li a {
+            display: block;
+            padding: 10px 20px;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        nav ul li a:hover {
+            background-color: #555;
+        }
     </style>
 </head>
 <body>
+    <?php
+    include 'nav.php';
+    ?>
     <div class="container">
         <h2>HOD Page</h2>
  
@@ -107,7 +137,7 @@
 
         function handleStudentButtonClick(regNo, dutyLeaveId) {
             // Redirect to the duty leave approval page with the selected student's regNo and dutyLeaveId
-            window.location.href = "approval.php?regNo=" + encodeURIComponent(regNo) + "&dutyLeaveId=" + encodeURIComponent(dutyLeaveId);
+            window.location.href = "approval-hod.php?regNo=" + encodeURIComponent(regNo) + "&dutyLeaveId=" + encodeURIComponent(dutyLeaveId);
         }
 
         document.addEventListener("DOMContentLoaded", function () {
@@ -115,8 +145,6 @@
             dutyLeaveButton.addEventListener("click", handleDutyLeaveButtonClick);
         });
     </script>
-    <form action="logout.php" method="post">
-    <button type="submit">Logout</button>
-</form>
+    
 </body>
 </html>

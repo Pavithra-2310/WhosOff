@@ -50,14 +50,45 @@
         .button-container button {
             margin-right: 10px;
         }
+        nav {
+            background-color: #333;
+            color: #fff;
+            float:right;
+        }
+
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        nav ul li {
+            display: inline-block;
+            
+        }
+
+        nav ul li a {
+            display: block;
+            padding: 10px 20px;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        nav ul li a:hover {
+            background-color: #555;
+        }
     </style>
 </head>
 <body>
-    <?php
-    include 'config1.php';
 
-    if (isset($_GET['RegNo']) && isset($_GET['dutyLeaveId'])) {
-        $RegNo = $_GET['RegNo'];
+   
+    <?php
+    include 'config1.php' ;
+    include 'nav.php';
+
+    if (isset($_GET['regNo']) && isset($_GET['dutyLeaveId'])) {
+        
+        $RegNo = $_GET['regNo'];
         $dutyLeaveId = $_GET['dutyLeaveId'];
 
         // Fetch student details from the database based on Register Number
@@ -114,7 +145,8 @@
         }
 
         echo "<div class='button-container'>";
-        if ($dutyLeave['status'] === '2') {
+        if ($dutyLeave['status'] === 3) {
+            
             echo "<form method='POST' style='display: inline-block;'>";
             echo "<input type='hidden' name='dutyLeaveId' value='$dutyLeaveId'>";
             echo "<input type='hidden' name='action' value='approve'>";
@@ -125,13 +157,7 @@
             echo "<input type='hidden' name='action' value='reject'>";
             echo "<button class='red-button' type='submit'>Reject</button>";
             echo "</form>";
-        } elseif ($dutyLeave['status'] === '3') {
-            echo "<form method='POST' style='display: inline-block;'>";
-            echo "<input type='hidden' name='dutyLeaveId' value='$dutyLeaveId'>";
-            echo "<input type='hidden' name='action' value='update_dates'>";
-            echo "<button type='submit'>Update Dates</button>";
-            echo "</form>";
-        }
+        } 
         echo "</div>";
     }
 
@@ -141,13 +167,17 @@
         $action = $_POST['action'];
 
         if ($action === 'approve') {
-            // Update the duty leave status as approved
-            $sql = "UPDATE duty_leave SET status = '4' WHERE id = ?";
+            // Calculate the count of duty leave dates
+            $dateCount = count($dutyLeaveDates);
+        
+            // Update the duty leave status and noOfLeaves
+            $sql = "UPDATE duty_leave SET status = '4', noOfLeaves = ? WHERE id = ?";
             $stmt = $conn->prepare($sql);
-            $stmt->execute([$dutyLeaveId]);
-
+            $stmt->execute([$dateCount, $dutyLeaveId]);
+        
             echo "Duty leave approved.";
-        } elseif ($action === 'reject') {
+        }
+         elseif ($action === 'reject') {
             // Update the duty leave status as rejected
             $sql = "UPDATE duty_leave SET status = '-1' WHERE id = ?";
             $stmt = $conn->prepare($sql);
@@ -162,9 +192,7 @@
         }
     }
     ?>
-    <form action="logout.php" method="post">
-    <button type="submit">Logout</button>
-</form>
+    
 </body>
 
 </html>

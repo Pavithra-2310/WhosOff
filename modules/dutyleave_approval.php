@@ -50,12 +50,39 @@
         .button-container button {
             margin-right: 10px;
         }
+        nav {
+            background-color: #333;
+            color: #fff;
+            float:right;
+        }
+
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        nav ul li {
+            display: inline-block;
+            
+        }
+
+        nav ul li a {
+            display: block;
+            padding: 10px 20px;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        nav ul li a:hover {
+            background-color: #555;
+        }
     </style>
 </head>
 <body>
   <?php
   include 'config1.php';
-
+  include 'nav.php';
   if(isset($_GET['RegNo']) && isset($_GET['id'])) {
       $RegNo = $_GET['RegNo'];
       $id = $_GET['id'];
@@ -121,7 +148,7 @@ echo "<p><a href='uploads/" . $dutyLeave['file_name'] . "' target='_blank'>View 
       if($dutyLeave['status'] === 0) {
           echo "<form method='POST' style='display: inline-block;'>";
           echo "<input type='hidden' name='action' value='approve'>";
-          echo "<button class='green-button' type='submit'>Approve</button>";
+          echo "<button class='green-button' type='submit'>Recommend</button>";
           echo "</form>";
           echo "<form method='POST' style='display: inline-block;'>";
           echo "<input type='hidden' name='action' value='reject'>";
@@ -165,9 +192,7 @@ echo "<p><a href='uploads/" . $dutyLeave['file_name'] . "' target='_blank'>View 
   ?>
 
     </div>
-    <form action="logout.php" method="post">
-    <button type="submit">Logout</button>
-</form>
+    
 </body>
 </html>
 

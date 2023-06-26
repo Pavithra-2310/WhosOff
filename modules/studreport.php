@@ -3,35 +3,56 @@
 <head>
     <title>Student Profile</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
+        /* Reset default margin and padding */
+        * {
             margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f1f1f1;
+   
+}
+
+
+        /* Header styles */
+        header {
+            background-color: #333;
+            color: #fff;
             padding: 20px;
-            background-color: #f1f1f1;
+            text-align: center;
         }
 
         h1 {
-            text-align: center;
-            color: #333;
+            margin: 0;
         }
 
+        /* Table styles */
         table {
             border-collapse: collapse;
             margin: 20px auto;
             background-color: #fff;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 800px;
         }
 
-        table th,
-        table td {
+        th, td {
             border: 1px solid #ccc;
-            padding: 10px;
+            padding: 12px;
+            text-align: left;
         }
 
-        table th {
+        th {
             background-color: #f0f0f0;
         }
-
+        
+        /* Attendance section styles */
         .attendance-section {
             margin-top: 20px;
             text-align: center;
@@ -46,12 +67,14 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            transition: background-color 0.3s ease;
         }
 
         .attendance-section button:hover {
             background-color: #e0e0e0;
         }
 
+        /* Duty leave box styles */
         .duty-leave-box {
             border: 1px solid #ccc;
             padding: 10px;
@@ -76,19 +99,54 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            transition: background-color 0.3s ease;
         }
 
         .duty-leave-button input[type="submit"]:hover {
             background-color: #cc0000;
         }
-    </style>
 
+        /* Navigation styles */
+        nav {
+            background-color: #333;
+            color: #fff;
+            text-align: right;
+            padding: 10px;
+        }
+
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        nav ul li {
+            display: inline-block;
+        }
+
+        nav ul li a {
+            display: block;
+            padding: 10px 20px;
+            color: #fff;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            background-color: #555;
+        }
+        th:first-child {
+    background-color: #1E90FF;
+}
+    
+    </style>
 </head>
 <body>
-    <h1>Student Profile</h1>
+    <h1><center>Student Profile</center></h1>
 
     <?php
     include 'config1.php';
+    
     session_start();
 
     $regno = $_SESSION['RegNo'];
@@ -118,47 +176,64 @@
 
         if ($courseResult->rowCount() > 0) {
             while ($course = $courseResult->fetch(PDO::FETCH_ASSOC)) {
-                $attendancePercentage = round($course['AttendancePercentage'] * 100, 2);
+                $attendancePercentage = round(($course['AttendancePercentage']) * 100, 2);
                 echo "<div class='attendance-section'>";
-                
-                // Check if attendance is less than 75%
-                if ($attendancePercentage < 75) {
-                    // Check duty leave status
-                    $dutyLeaveQuery = "SELECT duty_leave.*, course.CourseCode, duty_leave.noOfLeaves FROM duty_leave INNER JOIN student ON student.RegNo = duty_leave.RegNo INNER JOIN student_relation ON student.sid = student_relation.sid INNER JOIN course ON course.BranchId = student_relation.Branchid WHERE student.RegNo = '{$regno}' AND course.CourseCode = '{$course['CourseCode']}'";
+            if($attendancePercentage >=75){
+                echo "<button onclick='getAttendancePercentage(\"" . $course['CourseCode'] . "\")'>" . $course['CourseCode'] . " - Attendance: " . $attendancePercentage . "%</button>";
 
+                  
+            }
+                
+
+                // Check if attendance is less than 75%
+               else  if ($attendancePercentage < 75) {
+                    // Check duty leave status
+                    $dutyLeaveQuery = "SELECT * FROM duty_leave INNER JOIN student ON student.RegNo = duty_leave.RegNo INNER JOIN student_relation ON student.sid = student_relation.sid INNER JOIN course ON course.BranchId = student_relation.Branchid WHERE student.RegNo = '{$regno}' AND course.CourseCode = '{$course['CourseCode']}'";
                     $dutyLeaveResult = $conn->query($dutyLeaveQuery);
 
                     if ($dutyLeaveResult->rowCount() > 0) {
                         $dutyLeave = $dutyLeaveResult->fetch(PDO::FETCH_ASSOC);
-                        if ($dutyLeave['status'] == 4) {
-                            $noOfLeaves = $dutyLeave['noOfLeaves'];
-                            $attendancePercentage += $noOfLeaves;
+                        if ($dutyLeave['status'] == 4 ) {
+                            
+                            $noOfleaves = $dutyLeave['noOfleaves'];
+                            
+                            $attendancePercentage = 75;
 
                             // Print new attendance with course code
+                            echo "<button onclick='getAttendancePercentage(\"" . $course['CourseCode'] . "\")'>" . $course['CourseCode'] . " - Attendance: 75 " .  "%</button>";
+                        }
+                        else
+                        {
                             echo "<button onclick='getAttendancePercentage(\"" . $course['CourseCode'] . "\")'>" . $course['CourseCode'] . " - Attendance: " . $attendancePercentage . "%</button>";
 
-                            if ($dutyLeave['status'] != 0) {
-                                echo "<div class='duty-leave-box'>";
-                                echo "<div class='duty-leave-button'>";
-                                echo "<form action='status.php' method='POST'>";
-                                echo "<input type='submit' value='View Status'/>";
-                                echo "</form>";
-                                echo "</div>";
-                                echo "</div>";
-                            } else {
-                                echo "<div class='duty-leave-box'>";
-                                echo "<div class='duty-leave-button'>";
-                                echo "<form action='dutyleave.php' method='POST'>";
-                                echo "<input type='submit' value='Apply For Duty Leave'/>";
-                                echo "</form>";
-                                echo "</div>";
-                                echo "</div>";
-                            }
                         }
+
+                        if ($dutyLeave['status'] != 0) {
+                            echo "<div class='duty-leave-box'>";
+                            echo "<div class='duty-leave-button'>";
+                            echo "<form action='status.php' method='POST'>";
+                            echo "<input type='submit' value='View Status'/>";
+                            echo "</form>";
+                            echo "</div>";
+                            echo "</div>";
+                        } else {
+                            echo "<div class='duty-leave-box'>";
+                            echo "<div class='duty-leave-button'>";
+                            echo "<form action='dutyleave.php' method='POST'>";
+                            echo "<input type='submit' value='Apply For Duty Leave'/>";
+                            echo "</form>";
+                            echo "</div>";
+                            echo "</div>";
+                        }
+                    } else {
+                        echo "<div class='duty-leave-box'>";
+                        echo "<div class='duty-leave-button'>";
+                        echo "<form action='dutyleave.php' method='POST'>";
+                        echo "<input type='submit' value='Apply For Duty Leave'/>";
+                        echo "</form>";
+                        echo "</div>";
+                        echo "</div>";
                     }
-                } else {
-                    // Print normal attendance with course code
-                    echo "<button onclick='getAttendancePercentage(\"" . $course['CourseCode'] . "\")'>" . $course['CourseCode'] . " - Attendance: " . $attendancePercentage . "%</button>";
                 }
 
                 echo "</div>";
@@ -170,10 +245,7 @@
         echo "No student data found.";
     }
     ?>
-
-    <form action="logout.php" method="post">
-        <button type="submit">Logout</button>
-    </form>
-
+ 
+    
 </body>
 </html>

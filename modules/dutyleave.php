@@ -3,23 +3,32 @@
 <head>
     <title>Apply for Duty Leave</title>
     <style>
-    body {
+   body {
         font-family: Arial, sans-serif;
-        margin: 20px;
+        margin: 0;
+        padding: 20px;
+        background-color: #f1f1f1;
     }
 
     h2 {
+        text-align: center;
         color: #333;
     }
 
     form {
         width: 400px;
+        margin: 20px auto;
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        border-radius: 6px;
     }
 
     label {
         display: block;
         margin-top: 10px;
-        color: #666;
+        color: #333;
+        font-weight: bold;
     }
 
     input[type="text"],
@@ -31,12 +40,22 @@
         padding: 10px;
         border: 1px solid #ccc;
         border-radius: 4px;
-        resize: vertical;
+        font-size: 14px;
+    }
+
+    input[type="text"]:focus,
+    textarea:focus,
+    input[type="file"]:focus,
+    input[type="date"]:focus,
+    input[type="time"]:focus {
+        outline: none;
+        border-color: #5b9bd5;
     }
 
     .date-container {
         display: flex;
         align-items: center;
+        margin-bottom: 10px;
     }
 
     .date-container input[type="date"],
@@ -62,6 +81,7 @@
         border-radius: 4px;
         cursor: pointer;
         margin-top: 20px;
+        font-size: 16px;
     }
 
     input[type="submit"]:hover {
@@ -88,17 +108,45 @@
         cursor: pointer;
         margin-top: 20px;
         text-decoration: none;
+        font-size: 16px;
     }
 
     .profile-button:hover {
         background-color: #45a049;
     }
+    nav {
+            background-color: #333;
+            color: #fff;
+            float:right;
+        }
+
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        nav ul li {
+            display: inline-block;
+            
+        }
+
+        nav ul li a {
+            display: block;
+            padding: 10px 20px;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        nav ul li a:hover {
+            background-color: #555;
+        }
     </style>
 </head>
 <body>
     <?php
     include 'config1.php';
-
+    include 'nav.php';
     if(isset($_POST['submit'])){
         $RegNo = $_POST['RegNo'];
         $reason = $_POST['reason'];
@@ -209,14 +257,12 @@
   
         if($action === 'submit') {
             // Update the duty leave status as approved
-            $sql = "UPDATE duty_leave SET status = '2' WHERE id = ?";
+            $sql = "UPDATE duty_leave SET status = '1' WHERE id = ?";
             $stmt = $conn->prepare($sql);
             $stmt->execute([$id]);
   
-            echo "Duty leave approved.";}}
+            echo "Duty leave applied.";}}
             ?>
-            <form action="logout.php" method="post">
-    <button type="submit">Logout</button>
-</form>
+            
 </body>
 </html>

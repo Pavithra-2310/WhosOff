@@ -4,48 +4,104 @@
     <title>Staff Advisors Page</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+        font-family: Arial, sans-serif;
+        background-color: #f1f1f1;
+        margin: 0;
+        padding: 20px;
+    }
+
+    .container {
+        margin: 20px;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 6px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 30px;
+    }
+
+    p {
+        margin-bottom: 10px;
+    }
+
+    .sections-container {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        margin-top: 20px;
+    }
+
+    .section {
+        margin-bottom: 20px;
+        flex: 1 1 45%;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        background-color: #fff;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .section-heading {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 10px;
+        text-align: center;
+    }
+
+    .button {
+        display: block;
+        width: 100%;
+        padding: 15px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-bottom: 10px;
+        background-color: #2196F3;
+        color: white;
+        font-size: 16px;
+        text-align: center;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+    }
+
+    .button-sem {
+        width: 200px;
+        margin-right: 10px;
+    }
+
+    .button:hover {
+        background-color: #1976D2;
+    }
+    nav {
+            background-color: #333;
+            color: #fff;
+            float:right;
         }
 
-        .container {
-            margin: 20px;
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
         }
 
-        .sections-container {
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
+        nav ul li {
+            display: inline-block;
+            
         }
 
-        .section {
-            margin-bottom: 20px;
-            flex: 1 1 30%;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-
-        .section-heading {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        .button {
+        nav ul li a {
             display: block;
-            width: 100%;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-bottom: 10px;
-            background-color: #2196F3;
-            color: white;
+            padding: 10px 20px;
+            color: #fff;
+            text-decoration: none;
         }
 
-        .button-sem {
-            width: 200px;
-            margin-right: 10px;
+        nav ul li a:hover {
+            background-color: #555;
         }
     </style>
  
@@ -55,7 +111,7 @@
     <h2>Staff Advisor's Page</h2>
     <?php
     include 'config1.php';
-    
+    include 'nav.php';
 
     session_start();
     $FacultyName = $_SESSION['FacultyName'];
@@ -100,14 +156,7 @@
             <button class="button button-view">View Attendance</button>
         </div>
 
-        <div class="section">
-            <?php
-            $semesters = array('Sem 1', 'Sem 2', 'Sem 3', 'Sem 4', 'Sem 5', 'Sem 6', 'Sem 7', 'Sem 8');
-            foreach ($semesters as $semester) {
-                echo '<button class="button button-sem">' . $semester . '</button>';
-            }
-            ?>
-        </div>
+        
     </div>
 </div>
 </body>
@@ -155,7 +204,5 @@
             requestButton.addEventListener("click", handleRequestButtonClick);
         });
     </script>
-<form action="logout.php" method="post">
-    <button type="submit">Logout</button>
-</form>
+
 </html>

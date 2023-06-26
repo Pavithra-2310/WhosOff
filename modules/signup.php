@@ -2,6 +2,33 @@
 <html>
 <head>
 	<title>sign up</title>
+	<style>nav {
+            background-color: #333;
+            color: #fff;
+            float:right;
+        }
+
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        nav ul li {
+            display: inline-block;
+            
+        }
+
+        nav ul li a {
+            display: block;
+            padding: 10px 20px;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        nav ul li a:hover {
+            background-color: #555;
+        }</style>
 </head>
 <body>
 <form action="post">
@@ -10,6 +37,8 @@
 <tr>
 <td colspan="3">
 <?php 
+include 'nav.php';
+include 'config1.php';
 	if(isset($_GET['msg']))
 		echo "<center><h3>".$_GET['msg']."</h3></center>";
 	elseif(isset($_GET['msg1']))
@@ -71,8 +100,6 @@ catch(PDOException $e){
 }
 
 ?>
-<form action="logout.php" method="post">
-    <button type="submit">Logout</button>
-</form>
+
 </body>
 </html>

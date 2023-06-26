@@ -21,19 +21,19 @@ if ($result->rowCount() > 0) {
 
     // Display the corresponding approval status
     if ($status == 1) {
-        echo "<marquee><h2>Duty Leave Not Approved</h2></marquee>";
+        echo "<h2>Duty Leave Not Approved</h2>";
     } elseif ($status == 0) {
-        echo "<marquee><h2>Approved by staff Advisor</h2></marquee>";
+        echo "<h2>Approved by staff Advisor</h2>";
     }elseif ($status == 3) {
         echo "Approved by  HOD";
 } elseif ($status == 4) {
-        echo "<marquee><h2>Approved by  Princhipal</h2></marquee>";
-	echo "<marquee><h2>Duty Leave Sanctioned</h2></marquee>"; 
+        echo "<h2>Approved by  Principal</h2>";
+	echo "<h2>Duty Leave Sanctioned</h2>"; 
 } 
 
 
-else {
-        echo "Status Unknown";
+else if ($status==-1){
+        echo "Application rejected";
     }
 } else {
     echo "No duty leave data found.";

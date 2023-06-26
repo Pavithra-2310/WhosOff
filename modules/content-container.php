@@ -27,7 +27,7 @@
 										include 'modules/'.$page.'.php';
 										break;
 									default:
-										include 'modules/attendance.php';
+										include 'modules/login.php';
 										break;
 								}
 							}

@@ -6,76 +6,118 @@
     <title>Principal Report</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f2f2f2;
-        }
+        font-family: Arial, sans-serif;
+        background-color: #f2f2f2;
+        margin: 0;
+        padding: 20px;
+    }
 
-        h1 {
-            color: #333;
-        }
+    h1 {
+        color: #333;
+        text-align: center;
+        margin-bottom: 30px;
+    }
 
-        h2 {
-            color: #666;
-        }
+    form {
+        margin: 0 auto;
+        max-width: 400px;
+        padding: 30px;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
 
-        form {
-            margin-top: 20px;
-            padding: 20px;
-            background-color: #fff;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
+    label {
+        display: block;
+        margin-bottom: 10px;
+        font-weight: bold;
+        color: #333;
+    }
 
-        label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: bold;
-        }
+    select, input[type="submit"] {
+        padding: 10px;
+        font-size: 14px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        width: 100%;
+        box-sizing: border-box;
+    }
 
-        select {
-            padding: 5px;
-            font-size: 14px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
+    input[type="submit"] {
+        background-color: #4CAF50;
+        color: #fff;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        margin-top: 20px;
+    }
 
-        input[type="submit"] {
-            padding: 10px 20px;
-            background-color: #4CAF50;
+    input[type="submit"]:hover {
+        background-color: #45a049;
+    }
+
+    a.logout {
+        display: block;
+        text-align: center;
+        margin-top: 20px;
+        color: #666;
+        text-decoration: none;
+    }
+
+    a.logout:hover {
+        text-decoration: underline;
+    }
+
+    button[type="submit"] {
+        padding: 10px 20px;
+        background-color: #f44336;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        display: block;
+        margin: 20px auto 0;
+    }
+
+    button[type="submit"]:hover {
+        background-color: #d32f2f;
+    }
+    nav {
+            background-color: #333;
             color: #fff;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
+            float:right;
         }
 
-        input[type="submit"]:hover {
-            background-color: #45a049;
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
         }
 
-        a {
-            display: block;
-            margin-top: 20px;
-            color: #666;
-        }
-
-        a.logout {
+        nav ul li {
             display: inline-block;
+            
+        }
+
+        nav ul li a {
+            display: block;
             padding: 10px 20px;
-            background-color: #f44336;
             color: #fff;
-            border: none;
-            border-radius: 4px;
             text-decoration: none;
         }
 
-        a.logout:hover {
-            background-color: #d32f2f;
+        nav ul li a:hover {
+            background-color: #555;
         }
     </style>
 </head>
 <body>
     <?php
+    include 'config1.php';
     session_start();
+    include 'nav.php';
+    
 
     // Check if the user is authenticated as a principal
     if (!isset($_SESSION['islogin']) || $_SESSION['islogin'] !== "1" || !isset($_SESSION['p_name'])) {
@@ -168,6 +210,9 @@
             // Redirect to the duty leave approval page with the selected student's TRV ID
             window.location.href = "approvallast.php?regNo=" + encodeURIComponent(RegNo) + "&dutyLeaveId=" + encodeURIComponent(dutyLeaveId);
         }
+        function handleAttendanceClick(){
+            window.location.href = 'hod_attendence_view.php';
+        }
 
         // Get the form element
         var reportForm = document.querySelector('form');
@@ -181,6 +226,9 @@
             if (view === 'leave') {
                 handleRequestButtonClick();
             }
+            else if(view==='attendance'){
+                handleAttendanceClick();
+            }
 
             // Perform any other desired actions or form validation here
 
@@ -189,8 +237,6 @@
         });
     });
 </script>
-<form action="logout.php" method="post">
-    <button type="submit">Logout</button>
-</form>
+
 </body>
 </html>
